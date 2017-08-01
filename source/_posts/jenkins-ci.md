@@ -112,6 +112,105 @@ Jenkins是一个可扩展的持续集成引擎
 4、在此，先行创建管理员账号之后进入主界面（如下图）：
    ![运行图](/images/jenkins/jenkins-6.png)
    ![运行图](/images/jenkins/jenkins-7.png)
+<br/>
+5、设置Jenkins的工作目录：系统管理——> 系统设置——> 主目录展开：
+   ![运行图](/images/jenkins/jenkins-8.png)
+<br/>
+6、其他配置暂不管，现在创建一个IOS的工作空间：My Views ——> 创建一个新任务
+   ![运行图](/images/jenkins/jenkins-9.png)
+<br/>
+7、输入项目名、构建一个自由风格项目，点击OK。
+   ![运行图](/images/jenkins/jenkins-10.png)
+<br/>
+8、配置源码管理地址。
+   a) 添加credential
+   ![运行图](/images/jenkins/jenkins-11.png)
+   b) 配置代码服务器地址
+   ![运行图](/images/jenkins/jenkins-12.png)
+
+<br/>
+9、点击保存，回到面板点击立即构建先把服务器代码签到本地。
+   ![运行图](/images/jenkins/jenkins-13.png)
+<br/>
+10、打开刚签下来的本地代码，确保可以编译可成功。
+<br/>
+11、回到Jenkins配置项目的构建脚本。
+   ![运行图](/images/jenkins/jenkins-14.png)
+   备：
+   archive_upload.sh 内容如下:
+   xcodebuild -workspace Zoharo_swift.xcworkspace -scheme Zoharo_swift -configuration Debug  clean archive -archivePath ZoharoArchive DEVELOPMENT_TEAM=H4FGQGLX69
+
+   ./xcbuild-safe.sh -exportArchive -archivePath ZoharoArchive.xcarchive -exportOptionsPlist exportOptions.plist -exportPath ZoharoIPA
+
+   #蒲公英上的User Key
+   uKey="78024b5845de2957c313725e00d1e146"
+   #蒲公英上的API Key
+   apiKey="7552f5ff809ea22c5452e22da87eea78"
+   #要上传的ipa文件路径
+   IPA_PATH="ZoharoIPA/Zoharo_swift.ipa"
+
+   #执行上传至蒲公英的命令
+   echo "++++++++++++++upload+++++++++++++"
+   curl -F "file=@${IPA_PATH}" -F "uKey=${uKey}" -F "_api_key=${apiKey}" http://www.pgyer.com/apiv1/app/upload
+<br/>
+   archive_upload 文件会用到xcbuild-safe.sh 、 exportOptions.plist 两个文件
+   xcbuild-safe.sh内容如下：
+
+   which rvm > /dev/null
+
+   if [[ $? -eq 0 ]]; then
+      echo "RVM detected, forcing to use system ruby"
+      [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+      rvm use system
+   fi
+
+   if which rbenv > /dev/null; then
+      echo "rbenv detected, removing env variables"
+      rbenv shell system
+   fi
+
+   unset RUBYLIB
+   unset RUBYOPT
+   unset BUNDLE_BIN_PATH
+   unset _ORIGINAL_GEM_PATH
+   unset BUNDLE_GEMFILE
+
+   unset GEM_HOME
+   unset GEM_PATH
+
+   set -x          # echoes commands
+   xcodebuild "$@" # calls xcodebuild with all the arguments passed to this
+<br/>
+   exportOptions.plist内容如下：
+   ![运行图](/images/jenkins/jenkins-15.png)
+<br/>
+12、回到面板，点击立即构建，确保构建脚本能构建成功。可以查看构建日志拍错。
+   ![运行图](/images/jenkins/jenkins-16.png)
+   点击正在构建的任务——>Console Output查看构建日志
+   ![运行图](/images/jenkins/jenkins-17.png)
+<br/>
+13、等待构建成功,可以看到打包成功、导出成功、上传蒲同英成功
+   ![运行图](/images/jenkins/jenkins-18.png)
+<br/>
+14、以上都需要手动点击立即构建才执行构建，有没有什么办法能不需要登录Jenkins，不点击立即构建就能让其自动构建。（需要安装gitlab插件）
+   利用gitlab hook设置可在代码提交时自动触发Jenkins构建。
+   首先先在Jenkins的构建触发器里设置一个构建token。
+   ![运行图](/images/jenkins/jenkins-19.png)
+   其次登录git服务器点击项目设置里的Webhooks
+   ![运行图](/images/jenkins/jenkins-20.png)
+   配置url点击add hook
+   ![运行图](/images/jenkins/jenkins-21.png)
+   点击Test 测试是否配置成功。
+   ![运行图](/images/jenkins/jenkins-22.png)
+
+15、到现在为此，所有设置已完成。可在本地编辑代码提交到git服务器，测试下是否能自动触发jenkins构建。
+
+总结:现实开发中可能会很频繁的提交代码，就会很频繁的触发构建。这样会造成大量的流量浪费和服务器资源。 
+   解决方法：单独创建一个构建分支代码，待开发到一定程度需要构建时，本地把正在开发的分支合并到构建分支中提交以触发构建分支的代码构建。
+
+
+
+
 
 
 
