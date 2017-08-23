@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>浅析TCP/IP网络基础——引用同事分享 | Bboymars</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="喜欢运动类型的活动">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="浅析TCP/IP网络基础——引用同事分享 | Bboymars">
+    <meta name="twitter:description" content="喜欢运动类型的活动">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="浅析TCP/IP网络基础——引用同事分享 | Bboymars">
+    <meta property="og:description" content="喜欢运动类型的活动">
+
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+
+    <link rel="canonical" href="https://github.com/hu5675/2017/08/22/tcp-ip/"/>
+
+                 
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Bboymars 的主页"><img src="/images/avatar.jpg" width="80" alt="Bboymars logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Bboymars">Bboymars</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">从事Java、IOS开发</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">喜欢运动类型的活动</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/hu5675" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div> 
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2017-08-22T02:52:10.000Z" class="post-list__meta--date date">2017-08-22</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title">浅析TCP/IP网络基础——引用同事分享</h1>
+  </header>
+
+  <section class="post">
+    <p>现今绝大部分项目中都会用到网络用于数据访问。而在工作中基本用到的都是上层已经封装好的第三方库和一些开源的框架。很多人都只知道怎么使用，对框架底层下网络协议很少真正的去了解。作为一个IT从业者，势必要去了解下网络底层。高楼大厦，起于平川。不积跬步，无以至千里，不积小流，无以成江海。</p>
+<h4 id="什么是TCP-IP-？"><a href="#什么是TCP-IP-？" class="headerlink" title="什么是TCP/IP ？"></a>什么是TCP/IP ？</h4><p>TCP/IP不是一个协议，而是一个协议族的统称。里面包括IP协议、IMCP协议、TCP协议。<br>TCP/IP 通常被认为是一个四层协议：<br><img src="/images/tcp-ip/1.png" alt="运行图"></p>
+<ol>
+<li>链路层。也称数据链路层或网络接口层，包括设备驱动程序和网络接口卡，它们一起处理与电缆物理接口细节。</li>
+<li>网络层。处理分组在网络中的活动。如分组的选路；网络层的协议包括IP协议、ICMP协议（Internet互联网控制协议）、IGMP协议（）Internet组管理协议。</li>
+<li>传输层。主要为两台主机上的应用程序提供端到端的通信，包括TCP（传输控制协议）和UDP（用户数据报协议）。</li>
+<li>应用层。处理特定的应用程序细节，有http，ftp,等等我们熟悉的协议。<br><br><br><img src="/images/tcp-ip/3.png" alt="运行图"></li>
+</ol>
+<p>TCP/IP协议族中不同层次的协议如下：<br><img src="/images/tcp-ip/2.png" alt="运行图"><br>互联网上的每个接口必须有唯一的IP地址，5类不同的IP地址格式和返回如下：<br><img src="/images/tcp-ip/4.png" alt="运行图"><br><img src="/images/tcp-ip/5.png" alt="运行图"><br>当应用程序用TCP传送数据时，数据被送入协议栈，然后逐个通过每一层直到被当作一串比特流送入网络，其中每一层对收到的数据都要增加一些首部信息。<br><img src="/images/tcp-ip/6.png" alt="运行图"></p>
+<h3 id="链路层"><a href="#链路层" class="headerlink" title="链路层"></a>链路层</h3><h4 id="链路层主要有三个目的："><a href="#链路层主要有三个目的：" class="headerlink" title="链路层主要有三个目的："></a>链路层主要有三个目的：</h4><p>1、为IP模块发送和接受IP数据；<br>2、为ARP模块发送ARP请求和接受ARP应答；<br>3、外RARP发送RARP请求和接受RARP应答。</p>
+<h4 id="环回接口"><a href="#环回接口" class="headerlink" title="环回接口"></a>环回接口</h4><p>环回接口允许运行在同一台主机上的客户程序和服务器程序通过TCP/IP进行通信，IP地址127.0.0.1被分配给这个接口，并命名为localhost。</p>
+<p>目的地址的环回地址时，照样还是传输层和网络层的所有过程，只是当IP数据报离开网络层时把它返回给自己，这样做简化了设计，因为环回接口可以看作是网络层下面的一个链路层。网络层把一份数据报传送给环回接口，就像传送给其它链路层一样，只不过环回接口把它返回到IP的输入队列中。</p>
+<h4 id="MTU"><a href="#MTU" class="headerlink" title="MTU"></a>MTU</h4><p>以太网对数据帧的长度有一个限制，最大值1500.链路层的这个特性称作MTU(最大传输大源)。如果IP层数据报的长度比链路层的MTU还要大，那么IP层就需要进行分片，每一片都要小于MTU。<br>如果两台主机之间的通信要通过多个网络，那么每个网络的链路层就可能有不同的MTU。两台通信主机路径中最小MTU，被称为路径MTU。两个方向上的选路不一定对称，因此路径MTU在两个方向上不一定是一致的。</p>
+<h3 id="IP协议"><a href="#IP协议" class="headerlink" title="IP协议"></a>IP协议</h3><p>IP是TCP/IP协议族中最为核心的协议。所有的TCP、UDP、ICMP及IGMP数据都以IP数据报格式传输。</p>
+<p>IP提供不可靠、无连接的数据服务。不可靠的是指它不能保证IP数据报能成功地到达目的地；无连接是指IP并不维护任何关于后续数据报的状态信息，每个数据报的处理是相互独立的。</p>
+<h4 id="IP数据报格式"><a href="#IP数据报格式" class="headerlink" title="IP数据报格式"></a>IP数据报格式</h4><p>IP数据报格式如下图所示，普通的IP首部长为20字节，除非含有选项字段。<br><img src="/images/tcp-ip/7.png" alt="运行图"></p>
+<p>总长度字段是指整个IP数据报的长度，该字段长16位，所以IP数据报的最大长度为65535字节。</p>
+<p>最后一个字段是任选项，是数据报中的一个可变长的可选信息，如记录路径、时间戳等，这些选项一般很少使用。</p>
+<h4 id="IP路由选择"><a href="#IP路由选择" class="headerlink" title="IP路由选择"></a>IP路由选择</h4><p>IP路由选择是简单的，对于主机来说，如果目的主机与源主机直接相连或都在一个共享网络上，那么IP数据报就直接送到目的主机上；否则主机就把数据报发往一默认的路由器上，由路由器来转发该数据报。</p>
+<p>IP层既可以配置成路由器的功能，也可以配置成主机的功能。IP层在内存中有一个路由表，当收到一份数据报并进行发送时，它都要对该表搜索一次。当数据报来自某个网络接口时，IP首先检查目的IP地址是否为本机的IP地址之一或者IP广播地址。如果是的话，数据报就被送到由IP首部协议字段所指定的协议模块进行处理。如果数据报的目的不是这些地址，如果IP层被设置为路由器的功能，那么就对数据报进行转发，否则数据报被丢弃。</p>
+<p>IP路由选择是逐跳进行的，IP并不知道到达任何目的的完整路径，所有IP路由选择只为数据报传输提供下一站路由器的IP地址。IP路由选择主要完成这些功能：</p>
+<p>1、搜索路由表，寻找能与目的IP地址完全匹配的表目。</p>
+<p>2、搜索路由表，寻找能与目的网络号相匹配的表目。</p>
+<p>3、搜索路由表，寻找标为”默认”的表目。</p>
+<p>如果上面的步骤都没有成功，数据报就不能被传送<br><img src="/images/tcp-ip/11.png" alt="运行图"></p>
+<h4 id="子网寻址"><a href="#子网寻址" class="headerlink" title="子网寻址"></a>子网寻址</h4><p>现在所有主机都要求支持子网编址。不是把IP地址看成单纯的一个网络号和一个主机号组成，而是吧主机号再分成一个子网号和一个主机号。</p>
+<p>主机通过子网掩码来确定IP地址多少位用于子网号，多少位用于主机号。子网掩码是一个32位的值，值为1的位留给网络号和子网号，为0的位留给主机号。</p>
+<p>给定IP地址和子网掩码以后，主机就可以确定IP数据报的目的是：（1）本子网上的主机；（2）本网络中其它子网的主机；（3）其它网络上的主机。</p>
+<h3 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h3><p>UDP是一个简单的面向数据报的传输层协议。应用程序必须关心IP数据报的长度，如果它超过了MTU，就要对IP数据报进行分片。</p>
+<h4 id="UDP首部"><a href="#UDP首部" class="headerlink" title="UDP首部"></a>UDP首部</h4><p>UDP首部的各字段如下图：</p>
+<p><img src="/images/tcp-ip/8.png" alt="运行图"></p>
+<p>端口号表示发送进程和接收进程，TCP端口号由TCP来查看，而UDP端口号由UDP来查看，TCP端口号和UDP端口号是相互独立的。</p>
+<p>IP数据报的最大长度时65535字节，这是由IP首部16比特总长度字段所限制的。除去20字节的IP首部和8字节的UDP首部，UDP数据报中用户数据的最长长度为65507字节。</p>
+<h4 id="IP分片"><a href="#IP分片" class="headerlink" title="IP分片"></a>IP分片</h4><p>IP把MTU与数据报长度进行比较，如果需要则进行分片。分片可以发生在原始发送端主机上，也可以发生在中间路由器上。把一份IP数据报分片以后，只有到达目的地才进行重新组装。重新组装由目的端的IP层来完成，其目的是使分片和重新组装过程对传输层透明。</p>
+<p>IP数据报中的标识字段包含一个唯一值，该值在数据报分片时被复制到每个片中。标志字段用其中一个比特来表示”更多的片”，除最后一片外，其它每个组成数据报的片都要报该比特置1。片偏移字段指的是该片偏移原始数据报开始处的位置。</p>
+<p>由于IP层本身没有超时重传的机制，即使只丢失一片数据也要重传整个数据报。如果对数据报分片的是中间路由器，而不是起始端系统，那么起始端系统就无法知道数据报是如何被分片的。所以要避免分片。</p>
+<p>需要注意的是，任何传输层首部只出现在第1片数据中。</p>
+<h4 id="IP路由选择-1"><a href="#IP路由选择-1" class="headerlink" title="IP路由选择"></a>IP路由选择</h4><p><img src="/images/tcp-ip/9.png" alt="运行图"></p>
+<h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><p>TCP提供一种面向连接的、可靠的字节流服务。TCP通过以下方式来提供可靠性：</p>
+<h5 id="应用数据被分割成TCP认为最合适发送的数据块。"><a href="#应用数据被分割成TCP认为最合适发送的数据块。" class="headerlink" title="应用数据被分割成TCP认为最合适发送的数据块。"></a>应用数据被分割成TCP认为最合适发送的数据块。</h5><ol>
+<li><p>TCP发送一个段后，它启动一个定时器，如果不能及时收到一个确认，将重发这个报文段。</p>
+</li>
+<li><p>TCP收到发自TCP连接另一端的数据时，将发送一个确认。</p>
+</li>
+<li><p>TCP将保持它首部和数据的校验和。</p>
+</li>
+<li><p>TCP对收到的数据进行重新排序，将收到的数据以正确的顺序交给应用层。</p>
+</li>
+<li><p>TCP的接收端会丢弃重复的数据。</p>
+</li>
+<li><p>TCP还能提供流量控制。</p>
+</li>
+</ol>
+<h4 id="TCP-IP的三次握手，四次分手"><a href="#TCP-IP的三次握手，四次分手" class="headerlink" title="TCP/IP的三次握手，四次分手"></a>TCP/IP的三次握手，四次分手</h4><h5 id="前提：A主动打开，B被动打开"><a href="#前提：A主动打开，B被动打开" class="headerlink" title="前提：A主动打开，B被动打开"></a>前提：A主动打开，B被动打开</h5><p><img src="/images/tcp-ip/12.png" alt="运行图"></p>
+<p>1、在建立连接之前，B先创建TCB（传输控制块），准备接受客户进程的连接请求，处于LISTEN（监听）状态<br>2、A首先创建TCB，然后向B发出连接请求，SYN置1，同时选择初始序号seq=x，进入SYN-SEND（同步已发送）状态<br>3、B收到连接请求后向A发送确认，SYN置1，ACK置1，同时产生一个确认序号ack=x+1。同时随机选择初始序号seq=y，进入SYN-RCVD（同步收到）状态<br>4、A收到确认连接请求后，ACK置1，确认号ack=y+1，seq=x+1，进入到ESTABLISHED（已建立连接）状态。向B发出确认连接，最后B也进入到ESTABLISHED（已建立连接）状态。</p>
+<h5 id="简单来说，就是"><a href="#简单来说，就是" class="headerlink" title="简单来说，就是"></a>简单来说，就是</h5><p>1、建立连接时，客户端发送SYN包（SYN=i）到服务器，并进入到SYN-SEND状态，等待服务器确认<br>2、服务器收到SYN包，必须确认客户的SYN（ack=i+1）,同时自己也发送一个SYN包（SYN=k）,即SYN+ACK包，此时服务器进入SYN-RECV状态<br>3、客户端收到服务器的SYN+ACK包，向服务器发送确认报ACK（ack=k+1）,此包发送完毕，客户端和服务器进入ESTABLISHED状态，完成三次握手</p>
+<h5 id="四次分手的过程（客户端我们用A表示，服务器端用B表示）"><a href="#四次分手的过程（客户端我们用A表示，服务器端用B表示）" class="headerlink" title="四次分手的过程（客户端我们用A表示，服务器端用B表示）"></a>四次分手的过程（客户端我们用A表示，服务器端用B表示）</h5><p>由于TCP连接时是全双工的，因此每个方向都必须单独进行关闭。这一原则是当一方完成数据发送任务后，发送一个FIN来终止这一方向的链接。收到一个FIN只是意味着这一方向上没有数据流动，既不会在收到数据，但是在这个TCP连接上仍然能够发送数据，直到这一方向也发送了FIN，首先进行关闭的一方将执行主动关闭，而另一方则执行被动关闭。</p>
+<p><img src="/images/tcp-ip/13.png" alt="运行图"></p>
+<h5 id="有人可能会问，为什么连接的时候是三次握手，而断开连接的时候需要四次挥手？"><a href="#有人可能会问，为什么连接的时候是三次握手，而断开连接的时候需要四次挥手？" class="headerlink" title="有人可能会问，为什么连接的时候是三次握手，而断开连接的时候需要四次挥手？"></a>有人可能会问，为什么连接的时候是三次握手，而断开连接的时候需要四次挥手？</h5><p>这是因为服务端在LISTEN状态下，收到建立连接请求的SYN报文后，把ACK和SYN放在一个报文里发送给客户端。而关闭连接时，当收到对方的FIN 报文时，仅仅表示对方不再发送数据了但是还能接收数据，己方也未必全部数据都发送给对方了，所以己方可以立即close，也可以发送一些数据给对方后，再 发送FIN报文给对方来表示同意现在关闭连接，因此，己方ACK和FIN一般都会分开发送。</p>
+<p>1、A发送一个FIN，用来关闭A到B的数据传送，A进入FIN_WAIT_1状态。<br>2、B收到FIN后，发送一个ACK给A，确认序号为收到序号+1（与SYN相同，一个FIN占用一个序号），B进入CLOSE_WAIT状态。<br>3、B发送一个FIN，用来关闭B到A的数据传送，B进入LAST_ACK状态。<br>4、A收到FIN后，A进入TIME_WAIT状态，接着发送一个ACK给B，确认序号为收到序号+1，B进入CLOSED状态，完成四次挥手。</p>
+<h4 id="TCP首部"><a href="#TCP首部" class="headerlink" title="TCP首部"></a>TCP首部</h4><p>TCP首部的数据格式如下图：</p>
+<p><img src="/images/tcp-ip/10.png" alt="运行图"></p>
+<p>序号用来标识从TCP发送端想TCP接收端发送的数据字节流，它表示在这个报文段中的第一个数据字节，TCP用需要对每个字节进行计数。确认序号包含发送确认的一端所期望收到的下一个序号，确认序号是上次已成功收到的数据字节序号加1。</p>
+<p>TCP的流量控制由连接的每一端通过声明的窗口大小来提供，这个值是接收端正期望接收的字节。窗口大小是一个16位的字段，所以窗口大小最大是65535字节，新的窗口扩大选项允许这个值按比例变化以提供更大的窗口。</p>
+<h4 id="超时与重传"><a href="#超时与重传" class="headerlink" title="超时与重传"></a>超时与重传</h4><p>对每个连接，TCP管理4个不同的定时器：</p>
+<p>1.重传定时器用于当希望收到另一端的确认。<br>2.坚持定时器使窗口大小信息保持不断流动。<br>3.保活定时器可以检测到一个空闲连接的另一端何时崩溃或重启。<br>4.2MSL定时器测量一个连接处于TIME_WAIT状态的时间。</p>
+
+  </section>
+
+</article>
+
+<section class="read-more">
+           
+    
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/08/01/jenkins-ci/" title="Jenkins 持续集成工具使用介绍">Jenkins 持续集成工具使用介绍</a></h2>
+                <p class="excerpt">
+                
+                需求缘起在软件开发过程中尤其在进行到测试阶段时候，开发人员需要打包提交到测试人员 ——&amp;gt; 测试人员发现bug并报告给开发人员 ——&amp;gt; 开发人员fix bug并再次打包提交到测试人员。反复这个流程直到没有bug为止。
+传统打包方法-1 （全手动）1、本地编译。
+2、本地导出war。
+3、上
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-08-01T07:07:13.000Z" class="post-list__meta--date date">2017-08-01</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/08/01/jenkins-ci/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+  
+<section class="post-comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      var disqus_shortname = 'bboymars'; 
+      
+  var disqus_identifier = '/2017/08/22/tcp-ip/';
+  var disqus_title = '浅析TCP/IP网络基础——引用同事分享';
+  var disqus_url = 'https://github.com/hu5675/2017/08/22/tcp-ip/';
+  
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          //dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+          dsq.src = 'https://a.disquscdn.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    
+    
+</footer>
+
+
+        </div>
+    </div>
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    
+</body>
+</html>
