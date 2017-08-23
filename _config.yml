@@ -74,6 +74,8 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 theme: new-vno
 
+disqus_shortname: bboymars
+
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
