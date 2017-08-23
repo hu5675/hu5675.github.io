@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+  <url>
+    <loc>https://hu5675.github.io/2017/08/22/tcp-ip/</loc>
+    <lastmod>2017-08-23T05:56:16.000Z</lastmod>
+    <data>
+        <display>
+        <title>浅析TCP/IP网络基础——引用同事分享</title>
+        <pubTime>2017-08-22T02:52:10.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://hu5675.github.io/2017/08/01/hello-world/</loc>
+    <lastmod>2017-08-01T07:07:13.000Z</lastmod>
+    <data>
+        <display>
+        <title>提升沟通能力启程之旅</title>
+        <pubTime>2017-08-01T07:07:13.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://hu5675.github.io/2017/08/01/jenkins-ci/</loc>
+    <lastmod>2017-08-01T07:07:13.000Z</lastmod>
+    <data>
+        <display>
+        <title>Jenkins 持续集成工具使用介绍</title>
+        <pubTime>2017-08-01T07:07:13.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+</urlset>
