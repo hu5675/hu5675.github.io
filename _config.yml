@@ -12,7 +12,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://hu5675.github.io
+url: http://bboymars.coding.me
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -80,8 +80,9 @@ disqus_shortname: bboymars
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/hu5675/hu5675.github.io.git
-  branch: master
+  # repo: https://github.com/hu5675/hu5675.github.io.git,master
+  repo: https://git.coding.net/bboymars/bboymars.git,master
+  # branch: master
 
 
 # 自动生成sitemap
