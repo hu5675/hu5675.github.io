@@ -4,6 +4,21 @@
 
     
   <url>
+    <loc>http://bboymars.coding.me/2018/03/23/mongodb_install_inDocker/</loc>
+    <lastmod>2018-03-23T03:03:34.000Z</lastmod>
+    <data>
+        <display>
+        <title>Docker中手动安装Mongodb，不使用Docker的MongoDB镜像。</title>
+        <pubTime>2018-03-23T02:57:29.257Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://bboymars.coding.me/2017/08/29/clean_code/</loc>
     <lastmod>2017-08-30T09:19:13.000Z</lastmod>
     <data>
