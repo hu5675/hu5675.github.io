@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     
-    <title>提升沟通能力启程之旅 | Bboymars</title>
+    <title>MrPeak CDD之模板脚本执行报错解决方法记录一下 | Bboymars</title>
     <meta name="renderer" content="webkit">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -15,11 +15,11 @@
     <meta name="description" content="喜欢运动类型的活动">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="提升沟通能力启程之旅 | Bboymars">
+    <meta name="twitter:title" content="MrPeak CDD之模板脚本执行报错解决方法记录一下 | Bboymars">
     <meta name="twitter:description" content="喜欢运动类型的活动">
 
     <meta property="og:type" content="article">
-    <meta property="og:title" content="提升沟通能力启程之旅 | Bboymars">
+    <meta property="og:title" content="MrPeak CDD之模板脚本执行报错解决方法记录一下 | Bboymars">
     <meta property="og:description" content="喜欢运动类型的活动">
 
     
@@ -33,7 +33,7 @@
     <meta name="generator" content="hexo"/>
     
 
-    <link rel="canonical" href="http://bboymars.coding.me/2017/08/01/hello-world/"/>
+    <link rel="canonical" href="http://bboymars.coding.me/2017/08/24/cdd-template/"/>
 
                  
 </head>
@@ -122,17 +122,27 @@
 
   <header class="post-header">
     <div class="post-meta">
-      <time datetime="2017-08-01T07:07:13.000Z" class="post-list__meta--date date">2017-08-01</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <time datetime="2017-08-24T06:11:27.000Z" class="post-list__meta--date date">2017-08-24</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
       <span class="page-pv">
       &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
       </span> 
    
     </div>
-    <h1 class="post-title">提升沟通能力启程之旅</h1>
+    <h1 class="post-title">MrPeak CDD之模板脚本执行报错解决方法记录一下</h1>
   </header>
 
   <section class="post">
-    <p>本人是个程序员，沟通能力比较弱。在工作之余喜欢看一些技术类的文章，但是看之后很少进行总结从中学到了什么、对自己有什么提高。也很少和团队其他人进行技术方案、设计方案之类的一些沟通与交流。更没有组织过技术分享之类的活动。<br>鉴于此<br>我想通过写博客来提高自己的沟通能力以及记录之后的一些学习心得总结。</p>
+    <p>参考：<a href="http://mrpeak.cn/blog/controller-demo/" target="_blank" rel="external">http://mrpeak.cn/blog/controller-demo/</a><br><img src="/images/cdd-template/1.png" alt="运行图"></p>
+<p>分为Controller，View，Presenter，Interactor，Adapter。Controller和View同MVC，Presenter配合Category语法负责业务逻辑和状态维护，Interactor做页面路由，Adapter处理UITableView的DataSource和Delegate。</p>
+<p>结构目录：</p>
+<p><img src="/images/cdd-template/2.png" alt="运行图"></p>
+<p>以上文件可使用模板脚本创建，避免重复劳动力.</p>
+<p>执行模板脚本时报错：sed: RE error: illegal byte sequence</p>
+<p>解决方法：在terminal 里执行：</p>
+<p>export LC_COLLATE=’C’<br>export LC_CTYPE=’C’</p>
+<p>再次执行模板脚本则成功。</p>
+<p><img src="/images/cdd-template/3.png" alt="运行图"></p>
+<p><img src="/images/cdd-template/4.png" alt="运行图"></p>
 
   </section>
 
@@ -144,6 +154,21 @@
                
             <div class="read-more-item">
                 <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/08/28/swfit-objc-type/" title="为什么说 Swift 比 Object-C 类型更安全？">为什么说 Swift 比 Object-C 类型更安全？</a></h2>
+                <p class="excerpt">
+                
+                Type System 之static 较 dynamic更安全编程语言大多都有自己的Type System, ObjC和Swift都有。
+Type 就像自然语言里的名词、动词、介词等等，是一种避免代码表达错误的约束。Type不仅仅包括对int、float等这类Primitive type，对象的c
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-08-28T05:52:28.000Z" class="post-list__meta--date date">2017-08-28</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/08/28/swfit-objc-type/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
                 <h2 class="post-list__post-title post-title"><a href="/2017/08/22/tcp-ip/" title="浅析TCP/IP网络基础——引用同事分享">浅析TCP/IP网络基础——引用同事分享</a></h2>
                 <p class="excerpt">
                 
@@ -152,23 +177,6 @@
                 &hellip;
                 </p>
                 <div class="post-list__meta"><time datetime="2017-08-22T02:52:10.000Z" class="post-list__meta--date date">2017-08-22</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/08/22/tcp-ip/">继续阅读</a></div>
-                           
-            </div>
-        
-        
-               
-            <div class="read-more-item">
-                <span class="read-more-item-dim">更早的文章</span>
-                <h2 class="post-list__post-title post-title"><a href="/2017/08/01/jenkins-ci/" title="Jenkins 持续集成工具使用介绍">Jenkins 持续集成工具使用介绍</a></h2>
-                <p class="excerpt">
-                
-                需求缘起在软件开发过程中尤其在进行到测试阶段时候，开发人员需要打包提交到测试人员 ——&amp;gt; 测试人员发现bug并报告给开发人员 ——&amp;gt; 开发人员fix bug并再次打包提交到测试人员。反复这个流程直到没有bug为止。
-传统打包方法-1 （全手动）1、本地编译。
-2、本地导出war。
-3、上
-                &hellip;
-                </p>
-                <div class="post-list__meta"><time datetime="2017-08-01T07:07:13.000Z" class="post-list__meta--date date">2017-08-01</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/08/01/jenkins-ci/">继续阅读</a></div>
                        
             </div>
         
@@ -184,9 +192,9 @@
   <script type="text/javascript">
       var disqus_shortname = 'bboymars'; 
       
-  var disqus_identifier = '/2017/08/01/hello-world/';
-  var disqus_title = '提升沟通能力启程之旅';
-  var disqus_url = 'http://bboymars.coding.me/2017/08/01/hello-world/';
+  var disqus_identifier = '/2017/08/24/cdd-template/';
+  var disqus_title = 'MrPeak CDD之模板脚本执行报错解决方法记录一下';
+  var disqus_url = 'http://bboymars.coding.me/2017/08/24/cdd-template/';
   
 
       /* * * DON'T EDIT BELOW THIS LINE * * */

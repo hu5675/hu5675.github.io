@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     
-    <title>提升沟通能力启程之旅 | Bboymars</title>
+    <title>为什么说 Swift 比 Object-C 类型更安全？ | Bboymars</title>
     <meta name="renderer" content="webkit">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -15,11 +15,11 @@
     <meta name="description" content="喜欢运动类型的活动">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="提升沟通能力启程之旅 | Bboymars">
+    <meta name="twitter:title" content="为什么说 Swift 比 Object-C 类型更安全？ | Bboymars">
     <meta name="twitter:description" content="喜欢运动类型的活动">
 
     <meta property="og:type" content="article">
-    <meta property="og:title" content="提升沟通能力启程之旅 | Bboymars">
+    <meta property="og:title" content="为什么说 Swift 比 Object-C 类型更安全？ | Bboymars">
     <meta property="og:description" content="喜欢运动类型的活动">
 
     
@@ -33,7 +33,7 @@
     <meta name="generator" content="hexo"/>
     
 
-    <link rel="canonical" href="http://bboymars.coding.me/2017/08/01/hello-world/"/>
+    <link rel="canonical" href="http://bboymars.coding.me/2017/08/28/swfit-objc-type/"/>
 
                  
 </head>
@@ -122,17 +122,32 @@
 
   <header class="post-header">
     <div class="post-meta">
-      <time datetime="2017-08-01T07:07:13.000Z" class="post-list__meta--date date">2017-08-01</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <time datetime="2017-08-28T05:52:28.000Z" class="post-list__meta--date date">2017-08-28</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
       <span class="page-pv">
       &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
       </span> 
    
     </div>
-    <h1 class="post-title">提升沟通能力启程之旅</h1>
+    <h1 class="post-title">为什么说 Swift 比 Object-C 类型更安全？</h1>
   </header>
 
   <section class="post">
-    <p>本人是个程序员，沟通能力比较弱。在工作之余喜欢看一些技术类的文章，但是看之后很少进行总结从中学到了什么、对自己有什么提高。也很少和团队其他人进行技术方案、设计方案之类的一些沟通与交流。更没有组织过技术分享之类的活动。<br>鉴于此<br>我想通过写博客来提高自己的沟通能力以及记录之后的一些学习心得总结。</p>
+    <h3 id="Type-System-之static-较-dynamic更安全"><a href="#Type-System-之static-较-dynamic更安全" class="headerlink" title="Type System 之static 较 dynamic更安全"></a>Type System 之static 较 dynamic更安全</h3><p>编程语言大多都有自己的Type System, ObjC和Swift都有。</p>
+<p>Type 就像自然语言里的名词、动词、介词等等，是一种避免代码表达错误的约束。Type不仅仅包括对int、float等这类Primitive type，对象的class type，还包括function、block不那么明显的type。</p>
+<h4 id="static-VS-dynamic"><a href="#static-VS-dynamic" class="headerlink" title="static VS dynamic"></a>static VS dynamic</h4><p>static：由编译器管理，在compile 阶段就做类型check。</p>
+<p>dynamic：在runtime 阶段动态类型check（ Objective C 的 runtime 和 message 机制都属于dynamic）。</p>
+<h4 id="举例如下"><a href="#举例如下" class="headerlink" title="举例如下"></a>举例如下</h4><p>objc: int i = 0; i = @“test”; //compile warning 因为 type 的上下文信息是完整的，编译器可以做类型判断。</p>
+<p>objc: id obj = [NSData new]; obj = [NSObject new]; 由于 id 可以指向任意对象类型，id 可以在不同的时间点里指向不同的类型，编译器此时无法根据类型信息作出判断，是否存在类型使用错误的。将类型check延迟到runtime中去检测，可能会存在调用实际对象中不存在的方法而crash。</p>
+<p>swift: var i 编译器会提示：Type annotation missing in pattern，也就是缺少 type 信息。要声明一个变量，我们可以通过如下两种方式来提供 type 信息： swift var i = 0 //方式一，implicit typing var i: Int // var i:Int  方式二，explicit typing 方式一是通过赋值来做 type inference，方式二是通过显式的提供 type 信息。</p>
+<p>显然，static type 比 dynamic type 更安全，编译器可以帮我们做类型检查，这就是为什么 Swift 比 Objective C 在 type safety 上更安全。</p>
+<h3 id="Optional-in-Swift-Swift-比-Objective-C-更安全"><a href="#Optional-in-Swift-Swift-比-Objective-C-更安全" class="headerlink" title="Optional in Swift (Swift 比 Objective-C 更安全)"></a>Optional in Swift (Swift 比 Objective-C 更安全)</h3><pre><code>User* user = [self getCurrentUser];
+*
+*
+*
+//继续业务
+</code></pre><p>user可能是nil的情况下。在 Objective C 的 runtime 里，给 nil 对象发送消息也是安全的，这种安全只是表示不会 crash，但有可能原本应该执行的逻辑就没有继续下去了，从这一角度去看，nil 对象是对业务不安全的。</p>
+<p>而且我们把这种 nil 的 case 下所造成的影响延迟到了 run time 。</p>
+<p><br><br>更合理的做法是在编译时就考虑 nil 这种 case。optional 正是为此而生，如果我们定义返回值为 optional，那么 optional 的使用方就一定要考虑值不存在的场景，如果漏处理了为 nil 的场景，就会编译器报错，这样不光不会 crash，而且对业务逻辑来说也是安全的。<br><br><br>总结就是，当我们使用 optional 来写业务的时候，Swift 会强制我们去考虑 data 的各种可能性，这样写出来的函数，其逻辑就是完整的，全面的。</p>
 
   </section>
 
@@ -144,14 +159,15 @@
                
             <div class="read-more-item">
                 <span class="read-more-item-dim">最近的文章</span>
-                <h2 class="post-list__post-title post-title"><a href="/2017/08/22/tcp-ip/" title="浅析TCP/IP网络基础——引用同事分享">浅析TCP/IP网络基础——引用同事分享</a></h2>
+                <h2 class="post-list__post-title post-title"><a href="/2017/08/29/clean_code/" title="代码整洁之道——变量定义">代码整洁之道——变量定义</a></h2>
                 <p class="excerpt">
                 
-                现今绝大部分项目中都会用到网络用于数据访问。而在工作中基本用到的都是上层已经封装好的第三方库和一些开源的框架。很多人都只知道怎么使用，对框架底层下网络协议很少真正的去了解。作为一个IT从业者，势必要去了解下网络底层。高楼大厦，起于平川。不积跬步，无以至千里，不积小流，无以成江海。
-什么是TCP/IP
+                作为一个软件开发者，应使自己编写的代码具有很好可读性、很好的代码整洁度。对后期维护有着事半功倍的效果，也使另外的开发者能快速的明白你的编码思维。好的代码能让别人看了心情愉悦。
+引用美国童子军军规：让营地比你来时更干净
+如果每次签入时，代码都比签出时干净，那么代码就不会腐坏。清理并不一定要花多少功夫，
                 &hellip;
                 </p>
-                <div class="post-list__meta"><time datetime="2017-08-22T02:52:10.000Z" class="post-list__meta--date date">2017-08-22</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/08/22/tcp-ip/">继续阅读</a></div>
+                <div class="post-list__meta"><time datetime="2017-08-29T03:53:38.000Z" class="post-list__meta--date date">2017-08-29</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/08/29/clean_code/">继续阅读</a></div>
                            
             </div>
         
@@ -159,16 +175,14 @@
                
             <div class="read-more-item">
                 <span class="read-more-item-dim">更早的文章</span>
-                <h2 class="post-list__post-title post-title"><a href="/2017/08/01/jenkins-ci/" title="Jenkins 持续集成工具使用介绍">Jenkins 持续集成工具使用介绍</a></h2>
+                <h2 class="post-list__post-title post-title"><a href="/2017/08/24/cdd-template/" title="MrPeak CDD之模板脚本执行报错解决方法记录一下">MrPeak CDD之模板脚本执行报错解决方法记录一下</a></h2>
                 <p class="excerpt">
                 
-                需求缘起在软件开发过程中尤其在进行到测试阶段时候，开发人员需要打包提交到测试人员 ——&amp;gt; 测试人员发现bug并报告给开发人员 ——&amp;gt; 开发人员fix bug并再次打包提交到测试人员。反复这个流程直到没有bug为止。
-传统打包方法-1 （全手动）1、本地编译。
-2、本地导出war。
-3、上
+                参考：http://mrpeak.cn/blog/controller-demo/
+分为Controller，View，Presenter，Interactor，Adapter。Controller和View同MVC，Presenter配合Category语法负责业务逻辑和状态维护，Interact
                 &hellip;
                 </p>
-                <div class="post-list__meta"><time datetime="2017-08-01T07:07:13.000Z" class="post-list__meta--date date">2017-08-01</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/08/01/jenkins-ci/">继续阅读</a></div>
+                <div class="post-list__meta"><time datetime="2017-08-24T06:11:27.000Z" class="post-list__meta--date date">2017-08-24</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/08/24/cdd-template/">继续阅读</a></div>
                        
             </div>
         
@@ -184,9 +198,9 @@
   <script type="text/javascript">
       var disqus_shortname = 'bboymars'; 
       
-  var disqus_identifier = '/2017/08/01/hello-world/';
-  var disqus_title = '提升沟通能力启程之旅';
-  var disqus_url = 'http://bboymars.coding.me/2017/08/01/hello-world/';
+  var disqus_identifier = '/2017/08/28/swfit-objc-type/';
+  var disqus_title = '为什么说 Swift 比 Object-C 类型更安全？';
+  var disqus_url = 'http://bboymars.coding.me/2017/08/28/swfit-objc-type/';
   
 
       /* * * DON'T EDIT BELOW THIS LINE * * */
