@@ -82,8 +82,8 @@ livere_uid: MTAyMC8zNTExNi8xMTY1MQ==
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  # repo: https://github.com/hu5675/hu5675.github.io.git,master
-  repo: https://git.coding.net/bboymars/bboymars.git,master
+  repo: https://github.com/hu5675/hu5675.github.io.git,master
+  # repo: https://git.coding.net/bboymars/bboymars.git,master
   # branch: master
 
 
