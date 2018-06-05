@@ -1,5 +1,6 @@
 ---
 title: 为什么说 Swift 比 Object-C 类型更安全？
+date: 2017-08-15 10:01:25
 ---
 
 ### Type System 之static 较 dynamic更安全

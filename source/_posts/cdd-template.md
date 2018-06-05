@@ -1,5 +1,6 @@
 ---
 title: MrPeak CDD之模板脚本执行报错解决方法记录一下
+date: 2017-07-15 10:01:25
 ---
 
 参考：http://mrpeak.cn/blog/controller-demo/

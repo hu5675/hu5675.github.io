@@ -1,5 +1,6 @@
 ---
 title: Docker中手动安装Mongodb，不使用Docker的MongoDB镜像。
+date: 2018-03-16 10:01:25
 ---
 
 ### 一、环境准备（使用远程主机安装）。

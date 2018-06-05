@@ -1,5 +1,6 @@
 ---
 title: MySQL Replication 集群
+date: 2018-05-27 11:00:25
 ---
 
 ### 一、介绍

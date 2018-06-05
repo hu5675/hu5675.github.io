@@ -1,5 +1,6 @@
 ---
 title: Docker中搭建mongodb分片副本集集群 (mongodb sharding repliset cluster)。
+date: 2018-04-01 10:01:25
 ---
 
 ### 一、概念：sharded 集群由 shard、mongos、config server 三部分组成。

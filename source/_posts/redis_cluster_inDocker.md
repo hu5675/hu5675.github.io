@@ -1,5 +1,6 @@
 ---
 title: 利用docker搭建redis cluster(集群) ——3主3从
+date: 2018-05-01 10:01:25
 ---
 
 ### 一、介绍

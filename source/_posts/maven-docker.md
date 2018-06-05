@@ -1,5 +1,6 @@
 ---
 title: Maven + Docker + GitLab + Jenkins 构建镜像并提交Docker私有镜像库， 搭建持续集成环境
+date: 2018-02-15 10:01:25
 ---
 
 ### 需求缘起
