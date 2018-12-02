@@ -139,11 +139,11 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2017/07/15/cdd-template/</loc>
+    <loc>http://bboymars.coding.me/2017/07/15/clean_code/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>MrPeak CDD之模板脚本执行报错解决方法记录一下</title>
+        <title>代码整洁之道——变量定义</title>
         <pubTime>2017-07-15T02:01:25.000Z</pubTime>
         
          
@@ -154,12 +154,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2017/02/15/hello-world/</loc>
+    <loc>http://bboymars.coding.me/2017/07/15/cdd-template/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>提升沟通能力启程之旅</title>
-        <pubTime>2017-02-15T02:01:25.000Z</pubTime>
+        <title>MrPeak CDD之模板脚本执行报错解决方法记录一下</title>
+        <pubTime>2017-07-15T02:01:25.000Z</pubTime>
         
          
            
@@ -184,27 +184,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2017/07/15/clean_code/</loc>
+    <loc>http://bboymars.coding.me/2017/02/15/hello-world/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>代码整洁之道——变量定义</title>
-        <pubTime>2017-07-15T02:01:25.000Z</pubTime>
-        
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://bboymars.coding.me/2017/04/15/ios_static_framework_distinction/</loc>
-    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
-    <data>
-        <display>
-        <title>IOS静态库和Framework区别</title>
-        <pubTime>2017-04-15T02:01:25.000Z</pubTime>
+        <title>提升沟通能力启程之旅</title>
+        <pubTime>2017-02-15T02:01:25.000Z</pubTime>
         
          
            
@@ -229,12 +214,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2018/05/01/redis_cluster_inDocker/</loc>
+    <loc>http://bboymars.coding.me/2017/04/15/ios_static_framework_distinction/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>利用docker搭建redis cluster(集群) ——3主3从</title>
-        <pubTime>2018-05-01T02:01:25.000Z</pubTime>
+        <title>IOS静态库和Framework区别</title>
+        <pubTime>2017-04-15T02:01:25.000Z</pubTime>
         
          
            
@@ -250,6 +235,21 @@
         <display>
         <title>为什么说 Swift 比 Object-C 类型更安全？</title>
         <pubTime>2017-08-15T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2018/05/01/redis_cluster_inDocker/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>利用docker搭建redis cluster(集群) ——3主3从</title>
+        <pubTime>2018-05-01T02:01:25.000Z</pubTime>
         
          
            
