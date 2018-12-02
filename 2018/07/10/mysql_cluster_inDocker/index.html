@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Docker模拟搭建MySql Cluster集群 | Bboymars</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="喜欢运动类型的活动">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Docker模拟搭建MySql Cluster集群 | Bboymars">
+    <meta name="twitter:description" content="喜欢运动类型的活动">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Docker模拟搭建MySql Cluster集群 | Bboymars">
+    <meta property="og:description" content="喜欢运动类型的活动">
+
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+
+    <link rel="canonical" href="http://bboymars.coding.me/2018/07/10/mysql_cluster_inDocker/"/>
+
+                 
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Bboymars 的主页"><img src="/images/avatar.jpg" width="80" alt="Bboymars logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Bboymars">Bboymars</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">从事Java、IOS开发</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">喜欢运动类型的活动</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/hu5675" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div> 
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2018-07-10T02:01:25.000Z" class="post-list__meta--date date">2018-07-10</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title">Docker模拟搭建MySql Cluster集群</h1>
+  </header>
+
+  <section class="post">
+    <h3 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h3><pre><code>Mysql Cluster 是一种技术，其主要功能是在无共享的相关系统中部署内存中数据库的Cluster，其主要是通过NDB Cluster（简称NDB）存储引擎来实现的。
+NDB 存储引擎也叫NDB Cluster 存储引擎，主要用于MySQL Cluster 分布式集群环境，Cluster 是MySQL 从5.0 版本才开始提供的新功能。
+
+NDB Cluster Core Concepts
+
+NDBCLUSTER (also known as NDB) is an in-memory storage engine offering high-availability and data-persistence features.
+The NDBCLUSTER storage engine can be configured with a range of failover and load-balancing options,
+but it is easiest to start with the storage engine at the cluster level.
+NDB Cluster&apos;s NDB storage engine contains a complete set of data,
+dependent only on other data within the cluster itself.
+</code></pre><h4 id="ndbcluster的架构图"><a href="#ndbcluster的架构图" class="headerlink" title="ndbcluster的架构图"></a>ndbcluster的架构图</h4><p><img src="/images/mysql_cluster/1.png" alt=""> </p>
+<h4 id="InnoDB-和-NDB-存储引擎的对比"><a href="#InnoDB-和-NDB-存储引擎的对比" class="headerlink" title="InnoDB 和 NDB 存储引擎的对比"></a>InnoDB 和 NDB 存储引擎的对比</h4><p><img src="/images/mysql_cluster/3.png" alt=""> </p>
+<h3 id="二、环境准备"><a href="#二、环境准备" class="headerlink" title="二、环境准备"></a>二、环境准备</h3><h4 id="mysql镜像准备"><a href="#mysql镜像准备" class="headerlink" title="mysql镜像准备"></a>mysql镜像准备</h4><p><img src="/images/mysql_cluster/2.png" alt=""> </p>
+<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><pre><code>1、进入之前java容器，下载mysql并配置必要信息
+[root@izbp13cqwumhn4wi93is2wz ~]# docker exec -it 29319265f477 /bin/bash
+root@29319265f477:/#     
+
+2、进入home目录，下载mysql cluster
+root@29319265f477:/# cd home/
+root@29319265f477:/home# wget http://mirrors.sohu.com/mysql/MySQL-Cluster-7.5/mysql-cluster-gpl-7.5.6-linux-glibc2.5-x86_64.tar.gz
+root@29319265f477:/home# ll      
+total 831392
+drwxr-xr-x  2 root root        66 Jul  9 07:29 ./
+drwxr-xr-x 21 root root       242 May 23 12:51 ../
+-rw-r--r--  1 root root 851342279 Jan  5  2017 mysql-cluster-gpl-7.5.5-linux-glibc2.5-x86_64.tar.gz
+root@29319265f477:/home# 
+
+3、解压
+root@29319265f477:/home# tar zxvf mysql-cluster-gpl-7.5.5-linux-glibc2.5-x86_64.tar.gz -C /usr/local/    
+
+4、进入/usr/local，建立软连接
+root@29319265f477:/home# cd /usr/local/
+root@29319265f477:/usr/local# ln -s mysql-cluster-gpl-7.5.5-linux-glibc2.5-x86_64 mysql 
+
+5、复制ndbd数据节点执行文件到/usr/local/bin 
+root@29319265f477:/usr/local# cd mysql
+root@29319265f477:/usr/local/mysql# cp bin/ndbd /usr/local/bin/ndbd
+root@29319265f477:/usr/local/mysql# cp bin/ndbmtd /usr/local/bin/ndbmtd
+
+6、复制ndb_mem管理配置节点执行文件到/usr/local/bin 
+root@29319265f477:/usr/local/mysql# cp bin/ndb_mgm* /usr/local/bin
+
+7、Configuring the data nodes and SQL nodes.
+root@29319265f477:/usr/local/mysql# vim /etc/my.cnf   
+
+[mysqld]
+ndbcluster
+
+[mysql_cluster]
+ndb-connectstring=192.168.0.2,192.168.0.3
+
+8、Configuring the management node.  
+root@29319265f477:/usr/local/mysql# mkdir /var/lib/mysql-cluster
+root@29319265f477:/usr/local/mysql# cd /var/lib/mysql-cluster
+root@29319265f477:/var/lib/mysql-cluster# vim config.ini
+
+[ndbd default]
+NoOfReplicas=2    
+DataMemory=80M   
+IndexMemory=18M   
+ServerPort=2202   
+
+[ndb_mgmd]
+NodeId=1
+HostName=192.168.0.2        
+DataDir=/var/lib/mysql-cluster 
+
+[ndb_mgmd]
+NodeId=2
+HostName=192.168.0.3
+DataDir=/var/lib/mysql-cluster
+
+[ndbd]                  
+HostName=192.168.0.4       
+NodeId=3                       
+DataDir=/usr/local/mysql/data   
+
+[ndbd]
+HostName=192.168.0.5         
+NodeId=4                       
+DataDir=/usr/local/mysql/data   
+
+[mysqld]
+NodeId=5
+HostName=192.168.0.6          
+
+[mysqld]
+NodeId=6
+HostName=192.168.0.7
+
+保存退出vim,并创建目录 /usr/local/mysql/data
+root@29319265f477:/usr/local/mysql# mkdir /usr/local/mysql/data
+
+9、退出java容积并构建mysql镜像
+docker commit -m &apos;mysql cluster&apos; 29319265f477 ubuntu:mysql_cluster
+
+10、查看构建的mysql镜像
+[root@izbp13cqwumhn4wi93is2wz ~]# docker images
+REPOSITORY                      TAG                 IMAGE ID            CREATED             SIZE
+ubuntu                          mysql_cluster       369ce5a0f7bc        2 minutes ago       5.35 GB
+ubuntu                          zookeeper           bb9006876c2f        6 weeks ago         1.04 GB
+</code></pre><h4 id="ndbcluster节点准备："><a href="#ndbcluster节点准备：" class="headerlink" title="ndbcluster节点准备："></a>ndbcluster节点准备：</h4><pre><code>manage node 1 : 192.168.0.2
+manage node 2 : 192.168.0.3
+data node 1: 192.168.0.4
+data node 2: 192.168.0.5
+sql node 1: 192.168.0.6
+sql node 2: 192.168.0.7
+</code></pre><h4 id="步骤-1"><a href="#步骤-1" class="headerlink" title="步骤"></a>步骤</h4><pre><code>1、创建单独的网络
+[root@izbp13cqwumhn4wi93is2wz ~]# docker network create cluster --subnet=192.168.0.0/16
+
+2、新开ssh窗口，创建容器：manage node 1
+[root@izbp13cqwumhn4wi93is2wz ~]# docker run -it --net=cluster --name mysqlcluster_mem_1 --ip=192.168.0.2  ubuntu:mysql_cluster
+
+3、新开ssh窗口，创建容器：manage node 2
+[root@izbp13cqwumhn4wi93is2wz ~]# docker run -it --net=cluster --name mysqlcluster_mem_2 --ip=192.168.0.3  ubuntu:mysql_cluster
+
+4、新开ssh窗口，创建容器：data node 1
+[root@izbp13cqwumhn4wi93is2wz ~]# docker run -it --net=cluster --name mysqlcluster_datanode_1 --ip=192.168.0.4  ubuntu:mysql_cluster
+
+5、新开ssh窗口，创建容器：data node 2
+[root@izbp13cqwumhn4wi93is2wz ~]# docker run -it --net=cluster --name mysqlcluster_datanode_2 --ip=192.168.0.5  ubuntu:mysql_cluster
+
+6、新开ssh窗口，创建容器：sql node 1
+[root@izbp13cqwumhn4wi93is2wz ~]# docker run -it --net=cluster --name mysqlcluster_sqlnode_1 --ip=192.168.0.6  ubuntu:mysql_cluster
+
+7、新开ssh窗口，创建容器：sql node 2
+[root@izbp13cqwumhn4wi93is2wz ~]# docker run -it --net=cluster --name mysqlcluster_sqlnode_2 --ip=192.168.0.7  ubuntu:mysql_cluster
+</code></pre><h4 id="配置并启动节点"><a href="#配置并启动节点" class="headerlink" title="配置并启动节点"></a>配置并启动节点</h4><h5 id="配置manage-node-1-，并启动"><a href="#配置manage-node-1-，并启动" class="headerlink" title="配置manage node 1 ，并启动"></a>配置manage node 1 ，并启动</h5><pre><code>root@d33444d03568:/usr/local/mysql# vim /var/lib/mysql-cluster/config.ini  
+
+[ndbd default]
+NoOfReplicas=2
+DataMemory=80M
+IndexMemory=18M
+ServerPort=2202
+
+[ndb_mgmd]
+NodeId=1
+HostName=192.168.0.2
+DataDir=/var/lib/mysql-cluster
+
+[ndb_mgmd]
+NodeId=2
+HostName=192.168.0.3
+DataDir=/var/lib/mysql-cluster
+
+[ndbd]
+HostName=192.168.0.4
+NodeId=3
+DataDir=/usr/local/mysql/data
+
+[ndbd]
+HostName=192.168.0.5
+NodeId=4
+DataDir=/usr/local/mysql/data
+
+[mysqld]
+NodeId=5
+HostName=192.168.0.6
+
+[mysqld]
+NodeId=6
+HostName=192.168.0.7
+
+root@d33444d03568:/usr/local/mysql# vim /etc/my.cnf 
+
+[mysqld]
+ndbcluster
+
+[mysql_cluster]
+ndb-connectstring=192.168.0.2,192.168.0.3
+
+启动
+root@d33444d03568:/usr/local/mysql# ndb_mgmd -f /var/lib/mysql-cluster/config.ini --nowait-nodes=2
+
+查看cluster状态
+root@d33444d03568:/usr/local/mysql# ndb_mgm
+-- NDB Cluster -- Management Client --
+ndb_mgm&gt; show
+Connected to Management Server at: 192.168.0.2:1186
+Cluster Configuration
+---------------------
+[ndbd(NDB)]     2 node(s)
+id=3 (not connected, accepting connect from 192.168.0.4)
+id=4 (not connected, accepting connect from 192.168.0.5)
+
+[ndb_mgmd(MGM)] 2 node(s)
+id=1    @192.168.0.2  (mysql-5.7.17 ndb-7.5.5)
+id=2 (not connected, accepting connect from 192.168.0.3)
+
+[mysqld(API)]   2 node(s)
+id=5 (not connected, accepting connect from 192.168.0.6)
+id=6 (not connected, accepting connect from 192.168.0.7)
+</code></pre><h5 id="配置manage-node-2-，并启动"><a href="#配置manage-node-2-，并启动" class="headerlink" title="配置manage node 2 ，并启动"></a>配置manage node 2 ，并启动</h5><pre><code>/etc/my.cnf  /var/lib/mysql-cluster/config.ini  配置和manage node 1一样
+
+启动
+root@8821c92cf699:/usr/local/mysql# ndb_mgmd -c 192.168.0.2 -f /var/lib/mysql-cluster/config.ini 
+
+在管理节点1上再次查看状态，可见管理节点2已启动
+ndb_mgm&gt; show
+Cluster Configuration
+---------------------
+[ndbd(NDB)]     2 node(s)
+id=3 (not connected, accepting connect from 192.168.0.4)
+id=4 (not connected, accepting connect from 192.168.0.5)
+
+[ndb_mgmd(MGM)] 2 node(s)
+id=1    @192.168.0.2  (mysql-5.7.17 ndb-7.5.5)
+id=2    @192.168.0.3  (mysql-5.7.17 ndb-7.5.5)
+
+[mysqld(API)]   2 node(s)
+id=5 (not connected, accepting connect from 192.168.0.6)
+id=6 (not connected, accepting connect from 192.168.0.7)
+</code></pre><h5 id="配置data-node-1-，并启动"><a href="#配置data-node-1-，并启动" class="headerlink" title="配置data node 1 ，并启动"></a>配置data node 1 ，并启动</h5><pre><code>root@19e47e6ff525:/usr/local/mysql# vim /etc/my.cnf 
+
+[mysqld]
+ndbcluster
+
+[mysql_cluster]
+ndb-connectstring=192.168.0.2,192.168.0.3
+
+启动
+root@19e47e6ff525:/usr/local/mysql# ndbd 
+2018-07-11 02:17:09 [ndbd] INFO     -- Angel connected to &apos;192.168.0.2:1186&apos;
+2018-07-11 02:17:09 [ndbd] INFO     -- Angel allocated nodeid: 3
+
+在管理节点1上再次查看状态，可见数据节点1已启动
+ndb_mgm&gt; show
+Cluster Configuration
+---------------------
+[ndbd(NDB)]     2 node(s)
+id=3    @192.168.0.4  (mysql-5.7.17 ndb-7.5.5, starting, Nodegroup: 0)
+id=4 (not connected, accepting connect from 192.168.0.5)
+
+[ndb_mgmd(MGM)] 2 node(s)
+id=1    @192.168.0.2  (mysql-5.7.17 ndb-7.5.5)
+id=2    @192.168.0.3  (mysql-5.7.17 ndb-7.5.5)
+
+[mysqld(API)]   2 node(s)
+id=5 (not connected, accepting connect from 192.168.0.6)
+id=6 (not connected, accepting connect from 192.168.0.7)
+</code></pre><h5 id="配置data-node-2-，并启动"><a href="#配置data-node-2-，并启动" class="headerlink" title="配置data node 2 ，并启动"></a>配置data node 2 ，并启动</h5><pre><code>root@4f14fb18ebeb:/usr/local/mysql# vim /etc/my.cnf 
+
+[mysqld]
+ndbcluster
+
+[mysql_cluster]
+ndb-connectstring=192.168.0.2,192.168.0.3
+
+启动
+root@4f14fb18ebeb:/usr/local/mysql# ndbd 
+2018-07-11 02:19:17 [ndbd] INFO     -- Angel connected to &apos;192.168.0.2:1186&apos;
+2018-07-11 02:19:17 [ndbd] INFO     -- Angel allocated nodeid: 4
+
+在管理节点1上再次查看状态，可见数据节点2已启动
+ndb_mgm&gt; show
+Cluster Configuration
+---------------------
+[ndbd(NDB)]     2 node(s)
+id=3    @192.168.0.4  (mysql-5.7.17 ndb-7.5.5, Nodegroup: 0, *)
+id=4    @192.168.0.5  (mysql-5.7.17 ndb-7.5.5, Nodegroup: 0)
+
+[ndb_mgmd(MGM)] 2 node(s)
+id=1    @192.168.0.2  (mysql-5.7.17 ndb-7.5.5)
+id=2    @192.168.0.3  (mysql-5.7.17 ndb-7.5.5)
+
+[mysqld(API)]   2 node(s)
+id=5 (not connected, accepting connect from 192.168.0.6)
+id=6 (not connected, accepting connect from 192.168.0.7)
+</code></pre><h5 id="配置sql-node-1-，并启动"><a href="#配置sql-node-1-，并启动" class="headerlink" title="配置sql node 1 ，并启动"></a>配置sql node 1 ，并启动</h5><pre><code>root@e4afa0b9ac00:/usr/local/mysql# vim /etc/my.cnf 
+
+[mysqld]
+ndbcluster
+datadir=/usr/local/mysql/data
+socket=/usr/local/mysql/data/socket
+
+[mysql_cluster]
+ndb-connectstring=192.168.0.2,192.168.0.3
+
+创建个mysql用户组和用户
+root@e4afa0b9ac00:/usr/local/mysql# groupadd mysql
+root@e4afa0b9ac00:/usr/local/mysql# useradd -g mysql -s /bin/false mysql
+
+初始化sql节点 ，会产生一个空的root密码
+root@e4afa0b9ac00:/usr/local/mysql# ./bin/mysqld --initialize-insecure --user=mysql
+
+启动
+root@e4afa0b9ac00:/usr/local/mysql# ./bin/mysqld_safe &amp;
+
+在管理节点1上再次查看状态，可见sql节点1已启动
+ndb_mgm&gt; show
+Cluster Configuration
+---------------------
+[ndbd(NDB)]     2 node(s)
+id=3    @192.168.0.4  (mysql-5.7.17 ndb-7.5.5, Nodegroup: 0, *)
+id=4    @192.168.0.5  (mysql-5.7.17 ndb-7.5.5, Nodegroup: 0)
+
+[ndb_mgmd(MGM)] 2 node(s)
+id=1    @192.168.0.2  (mysql-5.7.17 ndb-7.5.5)
+id=2    @192.168.0.3  (mysql-5.7.17 ndb-7.5.5)
+
+[mysqld(API)]   2 node(s)
+id=5    @192.168.0.6  (mysql-5.7.17 ndb-7.5.5)
+id=6 (not connected, accepting connect from 192.168.0.7)
+
+登录mysql修改root密码,此时root密码空
+root@e4afa0b9ac00:/usr/local/mysql# ./bin/mysql -h 127.0.0.1 -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 5
+Server version: 5.7.17-ndb-7.5.5-cluster-gpl MySQL Cluster Community Server (GPL)
+
+Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type &apos;help;&apos; or &apos;\h&apos; for help. Type &apos;\c&apos; to clear the current input statement.
+
+mysql&gt; set password for root@localhost=password(&quot;root&quot;);
+mysql&gt; flush privileges;
+
+退出重新登录，此时密码root
+root@e4afa0b9ac00:/usr/local/mysql# ./bin/mysql -h 127.0.0.1 -p
+
+创建msyql用户用于远程连接
+mysql&gt; create user mysql identified by &quot;mysql&quot;;
+mysql&gt;  grant all privileges on *.* to &apos;mysql&apos;@&apos;%&apos; identified by &apos;mysql&apos; with grant option;   
+mysql&gt; flush privileges;
+
+测试远程连接，在另个容器中去连接，
+root@460fa51b62af:/usr/local/mysql# ./bin/mysql -h 192.168.0.6 -u mysql -p 
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 5.7.17-ndb-7.5.5-cluster-gpl MySQL Cluster Community Server (GPL)
+
+Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type &apos;help;&apos; or &apos;\h&apos; for help. Type &apos;\c&apos; to clear the current input statement.
+
+mysql&gt; 
+
+可见使用mysql用户能远程连接上sql节点1
+</code></pre><h5 id="配置sql-node-2-，并启动"><a href="#配置sql-node-2-，并启动" class="headerlink" title="配置sql node 2 ，并启动"></a>配置sql node 2 ，并启动</h5><pre><code>和sql node 1操作一样，此处省略
+
+在管理节点1上再次查看状态，可见sql节点1已启动
+ndb_mgm&gt; show
+Cluster Configuration
+---------------------
+[ndbd(NDB)]     2 node(s)
+id=3    @192.168.0.4  (mysql-5.7.17 ndb-7.5.5, Nodegroup: 0, *)
+id=4    @192.168.0.5  (mysql-5.7.17 ndb-7.5.5, Nodegroup: 0)
+
+[ndb_mgmd(MGM)] 2 node(s)
+id=1    @192.168.0.2  (mysql-5.7.17 ndb-7.5.5)
+id=2    @192.168.0.3  (mysql-5.7.17 ndb-7.5.5)
+
+[mysqld(API)]   2 node(s)
+id=5    @192.168.0.6  (mysql-5.7.17 ndb-7.5.5)
+id=6    @192.168.0.7  (mysql-5.7.17 ndb-7.5.5)
+
+可见 sql 节点 2 成功启动
+</code></pre><h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><h4 id="在sql-node-1上创建一张表看是否在sql-node-2上能访问"><a href="#在sql-node-1上创建一张表看是否在sql-node-2上能访问" class="headerlink" title="在sql node 1上创建一张表看是否在sql node 2上能访问"></a>在sql node 1上创建一张表看是否在sql node 2上能访问</h4><pre><code>sql node 1 上:
+mysql&gt; create database world;
+mysql&gt; use world;
+Database changed
+mysql&gt; DROP TABLE IF EXISTS `City`;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql&gt; CREATE TABLE `City` (
+    -&gt;   `ID` int(11) NOT NULL auto_increment,
+    -&gt;   `Name` char(35) NOT NULL default &apos;&apos;,
+    -&gt;   `CountryCode` char(3) NOT NULL default &apos;&apos;,
+    -&gt;   `District` char(20) NOT NULL default &apos;&apos;,
+    -&gt;   `Population` int(11) NOT NULL default &apos;0&apos;,
+    -&gt;   PRIMARY KEY  (`ID`)
+    -&gt; ) ENGINE=NDBCLUSTER DEFAULT CHARSET=latin1;
+
+INSERT INTO `City` VALUES (1,&apos;Kabul&apos;,&apos;AFG&apos;,&apos;Kabol&apos;,1780000);
+INSERT INTO `City` VALUES (2,&apos;Qandahar&apos;,&apos;AFG&apos;,&apos;Qandahar&apos;,237500);
+INSERT INTO `City` VALUES (3,&apos;Herat&apos;,&apos;AFG&apos;,&apos;Herat&apos;,186800);
+
+mysql&gt; show tables;
++-----------------+
+| Tables_in_world |
++-----------------+
+| City            |
++-----------------+
+1 row in set (0.01 sec)
+
+mysql&gt; select * from City;
++----+----------+-------------+----------+------------+
+| ID | Name     | CountryCode | District | Population |
++----+----------+-------------+----------+------------+
+|  3 | Herat    | AFG         | Herat    |     186800 |
+|  1 | Kabul    | AFG         | Kabol    |    1780000 |
+|  2 | Qandahar | AFG         | Qandahar |     237500 |
++----+----------+-------------+----------+------------+
+3 rows in set (0.00 sec)
+
+mysql&gt; 
+
+sql node 2 上:
+
+mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| ndbinfo            |
+| performance_schema |
+| sys                |
+| world              |
++--------------------+
+6 rows in set (0.00 sec)
+
+mysql&gt; use world;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql&gt; select * from City;
++----+----------+-------------+----------+------------+
+| ID | Name     | CountryCode | District | Population |
++----+----------+-------------+----------+------------+
+|  3 | Herat    | AFG         | Herat    |     186800 |
+|  1 | Kabul    | AFG         | Kabol    |    1780000 |
+|  2 | Qandahar | AFG         | Qandahar |     237500 |
++----+----------+-------------+----------+------------+
+3 rows in set (0.01 sec)
+
+mysql&gt; 
+
+可见sql node 2 和 sql node 1 的数据访问一样。
+</code></pre><h3 id="查看数据的分布情况，在管理节点上"><a href="#查看数据的分布情况，在管理节点上" class="headerlink" title="查看数据的分布情况，在管理节点上"></a>查看数据的分布情况，在管理节点上</h3><pre><code>ndb_mgm&gt; ALL REPORT MEMORY
+Node 3: Data usage is 1%(34 32K pages of total 2560)
+Node 3: Index usage is 1%(27 8K pages of total 2336)
+Node 4: Data usage is 1%(34 32K pages of total 2560)
+Node 4: Index usage is 1%(27 8K pages of total 2336)
+
+ndb_mgm&gt; 
+</code></pre><h3 id="如果要动态添加数据节点需要用到分发数据命令："><a href="#如果要动态添加数据节点需要用到分发数据命令：" class="headerlink" title="如果要动态添加数据节点需要用到分发数据命令："></a>如果要动态添加数据节点需要用到分发数据命令：</h3><pre><code>Alter online table ips reorganize partition;
+</code></pre>
+  </section>
+
+</article>
+
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2018/08/22/mha_cluster/" title="MHA架构模拟搭建">MHA架构模拟搭建</a></h2>
+                <p class="excerpt">
+                
+                架构图
+MHA介绍MHA（Master High Availability）目前在MySQL高可用方面是一个相对成熟的解决方案，它由日本DeNA公司youshimaton（现就职于Facebook公司）开发，
+是一套优秀的作为MySQL高可用性环境下故障切换和主从提升的高可用软件。在MySQL故障切
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2018-08-22T09:07:00.000Z" class="post-list__meta--date date">2018-08-22</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/08/22/mha_cluster/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2018/05/27/mysql_replication_docker/" title="MySQL Replication 集群">MySQL Replication 集群</a></h2>
+                <p class="excerpt">
+                
+                一、介绍为了保证mysql server的高可用，避免单点故障而造成整个系统不可用，Mysql提供了 Replication主从备份机制来解决单点故障。
+Mysql Replication提供多个服务器节点共同对外提供服务而组成的集群，每个节点都保存有一份完整的数据。
+当集群中的某一个节点出现故障不
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2018-05-27T03:00:25.000Z" class="post-list__meta--date date">2018-05-27</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/05/27/mysql_replication_docker/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+  <!--  -->
+
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNTExNi8xMTY1MQ==">
+    <script type="text/javascript">
+        (function(d, s) {
+            var j, e = d.getElementsByTagName(s)[0];
+
+            if (typeof LivereTower === 'function') {
+                return;
+            }
+
+            j = d.createElement(s);
+            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+            j.async = true;
+
+            e.parentNode.insertBefore(j, e);
+        })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    
+    
+</footer>
+
+
+        </div>
+    </div>
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    
+</body>
+</html>

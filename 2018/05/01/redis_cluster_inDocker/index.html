@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>利用docker搭建redis cluster(集群) ——3主3从 | Bboymars</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="喜欢运动类型的活动">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="利用docker搭建redis cluster(集群) ——3主3从 | Bboymars">
+    <meta name="twitter:description" content="喜欢运动类型的活动">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="利用docker搭建redis cluster(集群) ——3主3从 | Bboymars">
+    <meta property="og:description" content="喜欢运动类型的活动">
+
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+
+    <link rel="canonical" href="http://bboymars.coding.me/2018/05/01/redis_cluster_inDocker/"/>
+
+                 
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Bboymars 的主页"><img src="/images/avatar.jpg" width="80" alt="Bboymars logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Bboymars">Bboymars</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">从事Java、IOS开发</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">喜欢运动类型的活动</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/hu5675" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div> 
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2018-05-01T02:01:25.000Z" class="post-list__meta--date date">2018-05-01</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title">利用docker搭建redis cluster(集群) ——3主3从</h1>
+  </header>
+
+  <section class="post">
+    <h3 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h3><pre><code>Redis Cluster是Redis的分布式解决方案，在Redis 3.0版本正式推出的，
+有效解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构达到负载均衡的目的。
+Redis Cluster采用虚拟分槽，虚拟槽分区巧妙地使用了哈希空间，使用分散度良好的哈希函数把所有的数据映射到一个固定范围内的整数集合，
+整数定义为槽（slot）。比如Redis Cluster槽的范围是0 ～ 16383。槽是集群内数据管理和迁移的基本单位。
+采用大范围的槽的主要目的是为了方便数据的拆分和集群的扩展，每个节点负责一定数量的槽。
+</code></pre><p><a href="http://www.redis.cn/topics/cluster-tutorial.html" target="_blank">Redis Cluster详细文档</a></p>
+<h3 id="二、节点准备-主机中需要装有docker"><a href="#二、节点准备-主机中需要装有docker" class="headerlink" title="二、节点准备(主机中需要装有docker)"></a>二、节点准备(主机中需要装有docker)</h3><h4 id="1、在主机中创建8001、8002、8003、8004、8005、8006目录用于存放6个Redis节点的配置文件redis-conf"><a href="#1、在主机中创建8001、8002、8003、8004、8005、8006目录用于存放6个Redis节点的配置文件redis-conf" class="headerlink" title="1、在主机中创建8001、8002、8003、8004、8005、8006目录用于存放6个Redis节点的配置文件redis.conf"></a>1、在主机中创建8001、8002、8003、8004、8005、8006目录用于存放6个Redis节点的配置文件redis.conf</h4><pre><code>[root@izbp13cqwumhn4wi93is2wz cluster-test]# pwd
+/home/mars/cluster-test
+[root@izbp13cqwumhn4wi93is2wz cluster-test]# ll
+total 40
+drwxr-xr-x 2 root root 4096 Apr 28 11:46 8001
+drwxr-xr-x 2 root root 4096 Mar  9 22:28 8002
+drwxr-xr-x 2 root root 4096 Mar  9 22:28 8003
+drwxr-xr-x 2 root root 4096 Mar  9 22:28 8004
+drwxr-xr-x 2 root root 4096 Mar  9 22:29 8005
+drwxr-xr-x 2 root root 4096 Mar  9 22:29 8006
+</code></pre><h4 id="2、分别在8001、8002、8003、8004、8005、8006中创建redis-conf文件并添加内容"><a href="#2、分别在8001、8002、8003、8004、8005、8006中创建redis-conf文件并添加内容" class="headerlink" title="2、分别在8001、8002、8003、8004、8005、8006中创建redis.conf文件并添加内容"></a>2、分别在8001、8002、8003、8004、8005、8006中创建redis.conf文件并添加内容</h4><h5 id="8001-redis-conf"><a href="#8001-redis-conf" class="headerlink" title="8001/redis.conf"></a>8001/redis.conf</h5><pre><code>port 8001
+cluster-enabled yes
+cluster-config-file nodes-8001.conf
+cluster-node-timeout 5000
+appendonly yes
+</code></pre><h5 id="8002-redis-conf"><a href="#8002-redis-conf" class="headerlink" title="8002/redis.conf"></a>8002/redis.conf</h5><pre><code>port 8002
+cluster-enabled yes
+cluster-config-file nodes-8002.conf
+cluster-node-timeout 5000
+appendonly yes
+</code></pre><h5 id="8002-redis-conf-1"><a href="#8002-redis-conf-1" class="headerlink" title="8002/redis.conf"></a>8002/redis.conf</h5><pre><code>port 8003
+cluster-enabled yes
+cluster-config-file nodes-8003.conf
+cluster-node-timeout 5000
+appendonly yes
+</code></pre><h5 id="8002-redis-conf-2"><a href="#8002-redis-conf-2" class="headerlink" title="8002/redis.conf"></a>8002/redis.conf</h5><pre><code>port 8004
+cluster-enabled yes
+cluster-config-file nodes-8004.conf
+cluster-node-timeout 5000
+appendonly yes
+</code></pre><h5 id="8002-redis-conf-3"><a href="#8002-redis-conf-3" class="headerlink" title="8002/redis.conf"></a>8002/redis.conf</h5><pre><code>port 8005
+cluster-enabled yes
+cluster-config-file nodes-8005.conf
+cluster-node-timeout 5000
+appendonly yes
+</code></pre><h5 id="8002-redis-conf-4"><a href="#8002-redis-conf-4" class="headerlink" title="8002/redis.conf"></a>8002/redis.conf</h5><pre><code>port 8006
+cluster-enabled yes
+cluster-config-file nodes-8006.conf
+cluster-node-timeout 5000
+appendonly yes
+</code></pre><h4 id="3、查看docker镜像并启动6个redis-v4-0-8容器实例（redis-v4-0-8镜像是在ubuntu镜像基础上自己装了redis，当运行redis-v4-0-8容器时相当于运行了一个ubuntu虚拟机）"><a href="#3、查看docker镜像并启动6个redis-v4-0-8容器实例（redis-v4-0-8镜像是在ubuntu镜像基础上自己装了redis，当运行redis-v4-0-8容器时相当于运行了一个ubuntu虚拟机）" class="headerlink" title="3、查看docker镜像并启动6个redis_v4.0.8容器实例（redis_v4.0.8镜像是在ubuntu镜像基础上自己装了redis，当运行redis_v4.0.8容器时相当于运行了一个ubuntu虚拟机）"></a>3、查看docker镜像并启动6个redis_v4.0.8容器实例（redis_v4.0.8镜像是在ubuntu镜像基础上自己装了redis，当运行redis_v4.0.8容器时相当于运行了一个ubuntu虚拟机）</h4><p><img src="/images/redis_cluster_inDocker/1.png" alt=""> </p>
+<h5 id="启动8001对应实例——master-1："><a href="#启动8001对应实例——master-1：" class="headerlink" title="启动8001对应实例——master_1："></a>启动8001对应实例——master_1：</h5><pre><code>docker run -it --net=host --name master_1 -v /home/mars/cluster-test/8001/redis.conf:/home/redis-4.0.8/redis.conf docker.io/ubuntu:redis_v4.0.8
+</code></pre><h5 id="启动8002对应实例——master-2："><a href="#启动8002对应实例——master-2：" class="headerlink" title="启动8002对应实例——master_2："></a>启动8002对应实例——master_2：</h5><pre><code>docker run -it --net=host --name master_2 -v /home/mars/cluster-test/8002/redis.conf:/home/redis-4.0.8/redis.conf docker.io/ubuntu:redis_v4.0.8
+</code></pre><h5 id="启动8003对应实例——master-3："><a href="#启动8003对应实例——master-3：" class="headerlink" title="启动8003对应实例——master_3："></a>启动8003对应实例——master_3：</h5><pre><code>docker run -it --net=host --name master_3 -v /home/mars/cluster-test/8003/redis.conf:/home/redis-4.0.8/redis.conf docker.io/ubuntu:redis_v4.0.8
+</code></pre><h5 id="启动8004对应实例——slave-1："><a href="#启动8004对应实例——slave-1：" class="headerlink" title="启动8004对应实例——slave_1："></a>启动8004对应实例——slave_1：</h5><pre><code>docker run -it --net=host --name slave_1 -v /home/mars/cluster-test/8004/redis.conf:/home/redis-4.0.8/redis.conf docker.io/ubuntu:redis_v4.0.8
+</code></pre><h5 id="启动8005对应实例——slave-2："><a href="#启动8005对应实例——slave-2：" class="headerlink" title="启动8005对应实例——slave_2："></a>启动8005对应实例——slave_2：</h5><pre><code>docker run -it --net=host --name slave_2 -v /home/mars/cluster-test/8005/redis.conf:/home/redis-4.0.8/redis.conf docker.io/ubuntu:redis_v4.0.8
+</code></pre><h5 id="启动8006对应实例——slave-3："><a href="#启动8006对应实例——slave-3：" class="headerlink" title="启动8006对应实例——slave_3："></a>启动8006对应实例——slave_3：</h5><pre><code>docker run -it --net=host --name slave_3 -v /home/mars/cluster-test/8006/redis.conf:/home/redis-4.0.8/redis.conf docker.io/ubuntu:redis_v4.0.8
+</code></pre><h5 id="查看启动的6个容器实例"><a href="#查看启动的6个容器实例" class="headerlink" title="查看启动的6个容器实例"></a>查看启动的6个容器实例</h5><p><img src="/images/redis_cluster_inDocker/2.png" alt=""> </p>
+<font color="#dd0000">目前相当于有6台装有redis服务的Ubuntu系统（redis未运行）。</font>
+
+<p>下面分别进入到6台ubuntu系统中去启动redis服务并配置。</p>
+<h3 id="三、启动redis节点并配置redis-cluster。"><a href="#三、启动redis节点并配置redis-cluster。" class="headerlink" title="三、启动redis节点并配置redis cluster。"></a>三、启动redis节点并配置redis cluster。</h3><h4 id="启动6个redis节点"><a href="#启动6个redis节点" class="headerlink" title="启动6个redis节点"></a>启动6个redis节点</h4><h5 id="新开窗口进入master-1："><a href="#新开窗口进入master-1：" class="headerlink" title="新开窗口进入master_1："></a>新开窗口进入master_1：</h5><pre><code>docker exec -it ec7b22d64831 /bin/bash   #进入master_1容器
+cd home/redis-4.0.8                         #进入redis服务目录
+./src/redis-server redis.conf &amp;             #后台进程模式启动redis server服务
+
+root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# ./src/redis-cli -c -p 8001            #以集群模式连接本机redis-server
+127.0.0.1:8001&gt; CLUSTER NODES                                                          # 查看集群节点状态
+24a3c7107afadafa95132420ac271e1e9a571b5c :8001@18001 myself,master - 0 0 0 connected
+127.0.0.1:8001&gt; 
+</code></pre><h5 id="新开窗口进入master-2："><a href="#新开窗口进入master-2：" class="headerlink" title="新开窗口进入master_2："></a>新开窗口进入master_2：</h5><pre><code>docker exec -it b0608539bb46 /bin/bash   #进入master_1容器
+cd home/redis-4.0.8                         #进入redis服务目录
+./src/redis-server redis.conf &amp;             #后台进程模式启动redis server服务
+
+root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# ./src/redis-cli -c -p 8002
+127.0.0.1:8002&gt; 
+127.0.0.1:8002&gt; CLUSTER NODES
+52b2395f63124148fb6f1d777a121a08319efd64 :8002@18002 myself,master - 0 0 0 connected
+127.0.0.1:8002&gt; 
+</code></pre><font color="#dd0000"> 同样方式进入并启动redis-server （master_3、slave_1、slave_2、slave_3）</font>
+
+<p>现在在6台ubuntu系统中启动的6个单独的redis-server节点，彼此之间并没有任何联系。</p>
+<h4 id="节点握手使6个节点之间能彼此发现"><a href="#节点握手使6个节点之间能彼此发现" class="headerlink" title="节点握手使6个节点之间能彼此发现"></a>节点握手使6个节点之间能彼此发现</h4><h5 id="切换到master-1，使用redis-cli连接本机redis暴露的端口8001"><a href="#切换到master-1，使用redis-cli连接本机redis暴露的端口8001" class="headerlink" title="切换到master_1，使用redis-cli连接本机redis暴露的端口8001"></a>切换到master_1，使用redis-cli连接本机redis暴露的端口8001</h5><pre><code>root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# ./src/redis-cli -c -p 8001
+
+127.0.0.1:8001&gt; CLUSTER MEET 127.0.0.1 8002                    #和8002节点握手
+OK
+127.0.0.1:8001&gt; 36:M 30 Apr 15:05:34.450 # IP address for this node updated to 127.0.0.1
+127.0.0.1:8001&gt; 
+127.0.0.1:8001&gt; CLUSTER MEET 127.0.0.1 8003                    #和8003节点握手
+OK
+127.0.0.1:8001&gt; CLUSTER MEET 127.0.0.1 8004                    #和8004节点握手
+OK
+127.0.0.1:8001&gt; CLUSTER MEET 127.0.0.1 8005                    #和8005节点握手
+OK
+127.0.0.1:8001&gt; CLUSTER MEET 127.0.0.1 8006                    #和8006节点握手
+OK
+127.0.0.1:8001&gt; CLUSTER NODES                                 #查看集群节点状态
+0f11017d651c07e8614e9221ecbdbb0f7f4ce438 127.0.0.1:8005@18005 master - 0 1525100795000 4 connected
+cf29d49076528a34604f7b9b447d927f9086196e 127.0.0.1:8003@18003 master - 0 1525100794000 0 connected
+24a3c7107afadafa95132420ac271e1e9a571b5c 127.0.0.1:8001@18001 myself,master - 0 1525100794000 1 connected
+52b2395f63124148fb6f1d777a121a08319efd64 127.0.0.1:8002@18002 master - 0 1525100795662 2 connected
+b45471df0395e92da1f4e0a5a07c6a9b8316f67b 127.0.0.1:8004@18004 master - 0 1525100795000 3 connected
+2471dfd538f59af44858bc7f7a6ba3eee93b2e30 127.0.0.1:8006@18006 master - 0 1525100796061 5 connected
+127.0.0.1:8001&gt; 
+127.0.0.1:8001&gt; CLUSTER INFO                                 #查看集群信息
+cluster_state:fail
+cluster_slots_assigned:0
+cluster_slots_ok:0
+cluster_slots_pfail:0
+cluster_slots_fail:0
+cluster_known_nodes:6
+cluster_size:0
+cluster_current_epoch:5
+cluster_my_epoch:1
+cluster_stats_messages_ping_sent:266
+cluster_stats_messages_pong_sent:267
+cluster_stats_messages_meet_sent:5
+cluster_stats_messages_sent:538
+cluster_stats_messages_ping_received:267
+cluster_stats_messages_pong_received:271
+cluster_stats_messages_received:538
+127.0.0.1:8001&gt; 
+</code></pre><h4 id="给master-1、master-2、master-3分配槽（redis-cluster总共有16384个槽），在任意节点上执行（本例演示在master-1节点）："><a href="#给master-1、master-2、master-3分配槽（redis-cluster总共有16384个槽），在任意节点上执行（本例演示在master-1节点）：" class="headerlink" title="给master_1、master_2、master_3分配槽（redis cluster总共有16384个槽），在任意节点上执行（本例演示在master_1节点）："></a>给master_1、master_2、master_3分配槽（redis cluster总共有16384个槽），在任意节点上执行（本例演示在master_1节点）：</h4><pre><code>ctrl+c      #断开redis-cli连接
+root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# ./src/redis-cli -h 127.0.0.1 -p 8001 cluster addslots {0..5461} #给master_1分配槽
+OK
+root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# ./src/redis-cli -h 127.0.0.1 -p 8002 cluster addslots {5462..10922}  #给master_2分配槽
+OK
+root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# ./src/redis-cli -h 127.0.0.1 -p 8003 cluster addslots {10923..16383}  #给master_3分配槽
+OK
+root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# 
+#redis-cli连接并查看集群节点信息和状态,可以发现master_1、master_2、master_3已经分配好了槽，并且集群状态是ok
+root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# ./src/redis-cli -c -p 8001     
+127.0.0.1:8001&gt; CLUSTER NODES
+0f11017d651c07e8614e9221ecbdbb0f7f4ce438 127.0.0.1:8005@18005 master - 0 1525101200362 4 connected
+cf29d49076528a34604f7b9b447d927f9086196e 127.0.0.1:8003@18003 master - 0 1525101199861 0 connected 10923-16383
+24a3c7107afadafa95132420ac271e1e9a571b5c 127.0.0.1:8001@18001 myself,master - 0 1525101197000 1 connected 0-5461
+52b2395f63124148fb6f1d777a121a08319efd64 127.0.0.1:8002@18002 master - 0 1525101199560 2 connected 5462-10922
+b45471df0395e92da1f4e0a5a07c6a9b8316f67b 127.0.0.1:8004@18004 master - 0 1525101199360 3 connected
+2471dfd538f59af44858bc7f7a6ba3eee93b2e30 127.0.0.1:8006@18006 master - 0 1525101200000 5 connected
+127.0.0.1:8001&gt; 
+127.0.0.1:8001&gt; CLUSTER INFO
+cluster_state:ok
+cluster_slots_assigned:16384
+cluster_slots_ok:16384
+cluster_slots_pfail:0
+cluster_slots_fail:0
+cluster_known_nodes:6
+cluster_size:3
+cluster_current_epoch:5
+cluster_my_epoch:1
+cluster_stats_messages_ping_sent:938
+cluster_stats_messages_pong_sent:943
+cluster_stats_messages_meet_sent:5
+cluster_stats_messages_sent:1886
+cluster_stats_messages_ping_received:943
+cluster_stats_messages_pong_received:943
+cluster_stats_messages_received:1886
+</code></pre><font color="#dd0000"> 现在3主已经完成。</font>
+
+
+<h4 id="为3个主节点分别配置一个从节点"><a href="#为3个主节点分别配置一个从节点" class="headerlink" title="为3个主节点分别配置一个从节点"></a>为3个主节点分别配置一个从节点</h4><h5 id="为master-1配置slave节点，任意节点中使用redis-cli连接slave-1节点中的redis-server服务："><a href="#为master-1配置slave节点，任意节点中使用redis-cli连接slave-1节点中的redis-server服务：" class="headerlink" title="为master_1配置slave节点，任意节点中使用redis-cli连接slave_1节点中的redis-server服务："></a>为master_1配置slave节点，任意节点中使用redis-cli连接slave_1节点中的redis-server服务：</h5><pre><code>root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# ./src/redis-cli -c -p 8004              
+127.0.0.1:8004&gt; CLUSTER NODES    
+2471dfd538f59af44858bc7f7a6ba3eee93b2e30 127.0.0.1:8006@18006 master - 0 1525101718000 5 connected
+24a3c7107afadafa95132420ac271e1e9a571b5c 127.0.0.1:8001@18001 master - 0 1525101719000 1 connected 0-5461
+0f11017d651c07e8614e9221ecbdbb0f7f4ce438 127.0.0.1:8005@18005 master - 0 1525101719344 4 connected
+52b2395f63124148fb6f1d777a121a08319efd64 127.0.0.1:8002@18002 master - 0 1525101718043 2 connected 5462-10922
+cf29d49076528a34604f7b9b447d927f9086196e 127.0.0.1:8003@18003 master - 0 1525101718344 0 connected 10923-16383
+b45471df0395e92da1f4e0a5a07c6a9b8316f67b 127.0.0.1:8004@18004 myself,master - 0 1525101717000 3 connected
+127.0.0.1:8004&gt; 
+127.0.0.1:8004&gt; CLUSTER REPLICATE 24a3c7107afadafa95132420ac271e1e9a571b5c            #让当前节点slave_1（8004）节点成为master_1的从节点，24a3c7107afadafa95132420ac271e1e9a571b5c是master_1(8001)的节点id。
+OK
+</code></pre><h5 id="为master-2配置slave节点，任意节点中使用redis-cli连接slave-2节点中的redis-server服务："><a href="#为master-2配置slave节点，任意节点中使用redis-cli连接slave-2节点中的redis-server服务：" class="headerlink" title="为master_2配置slave节点，任意节点中使用redis-cli连接slave_2节点中的redis-server服务："></a>为master_2配置slave节点，任意节点中使用redis-cli连接slave_2节点中的redis-server服务：</h5><pre><code>root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# ./src/redis-cli -c -p 8005
+127.0.0.1:8005&gt; CLUSTER NODES
+cf29d49076528a34604f7b9b447d927f9086196e 127.0.0.1:8003@18003 master - 0 1525101855000 0 connected 10923-16383
+0f11017d651c07e8614e9221ecbdbb0f7f4ce438 127.0.0.1:8005@18005 myself,master - 0 1525101853000 4 connected
+2471dfd538f59af44858bc7f7a6ba3eee93b2e30 127.0.0.1:8006@18006 master - 0 1525101855061 5 connected
+24a3c7107afadafa95132420ac271e1e9a571b5c 127.0.0.1:8001@18001 master - 0 1525101854259 1 connected 0-5461
+52b2395f63124148fb6f1d777a121a08319efd64 127.0.0.1:8002@18002 master - 0 1525101853558 2 connected 5462-10922
+b45471df0395e92da1f4e0a5a07c6a9b8316f67b 127.0.0.1:8004@18004 slave 24a3c7107afadafa95132420ac271e1e9a571b5c 0 1525101855262 3 connected
+127.0.0.1:8005&gt; CLUSTER REPLICATE  52b2395f63124148fb6f1d777a121a08319efd64        #让当前节点slave_2（8005）节点成为master_1的从节点，52b2395f63124148fb6f1d777a121a08319efd64 是master_2(8002)的节点id。
+OK
+</code></pre><h5 id="为master-3配置slave节点，任意节点中使用redis-cli连接slave-3节点中的redis-server服务："><a href="#为master-3配置slave节点，任意节点中使用redis-cli连接slave-3节点中的redis-server服务：" class="headerlink" title="为master_3配置slave节点，任意节点中使用redis-cli连接slave_3节点中的redis-server服务："></a>为master_3配置slave节点，任意节点中使用redis-cli连接slave_3节点中的redis-server服务：</h5><pre><code>root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# ./src/redis-cli -c -p 8006
+127.0.0.1:8006&gt; CLUSTER NODES
+cf29d49076528a34604f7b9b447d927f9086196e 127.0.0.1:8003@18003 master - 0 1525101986000 0 connected 10923-16383
+b45471df0395e92da1f4e0a5a07c6a9b8316f67b 127.0.0.1:8004@18004 slave 24a3c7107afadafa95132420ac271e1e9a571b5c 0 1525101986978 3 connected
+52b2395f63124148fb6f1d777a121a08319efd64 127.0.0.1:8002@18002 master - 0 1525101985576 2 connected 5462-10922
+24a3c7107afadafa95132420ac271e1e9a571b5c 127.0.0.1:8001@18001 master - 0 1525101987579 1 connected 0-5461
+0f11017d651c07e8614e9221ecbdbb0f7f4ce438 127.0.0.1:8005@18005 slave 52b2395f63124148fb6f1d777a121a08319efd64 0 1525101987000 4 connected
+2471dfd538f59af44858bc7f7a6ba3eee93b2e30 127.0.0.1:8006@18006 myself,master - 0 1525101986000 5 connected
+127.0.0.1:8006&gt; CLUSTER REPLICATE cf29d49076528a34604f7b9b447d927f9086196e     #让当前节点slave_3（8006）节点成为master_1的从节点，cf29d49076528a34604f7b9b447d927f9086196e 是master_3(8003)的节点id。
+OK
+#查看集群最终节点状态和信息,可见3主3从已经配置完成
+127.0.0.1:8006&gt; CLUSTER NODES   
+cf29d49076528a34604f7b9b447d927f9086196e 127.0.0.1:8003@18003 master - 0 1525102074120 0 connected 10923-16383
+b45471df0395e92da1f4e0a5a07c6a9b8316f67b 127.0.0.1:8004@18004 slave 24a3c7107afadafa95132420ac271e1e9a571b5c 0 1525102073118 3 connected
+52b2395f63124148fb6f1d777a121a08319efd64 127.0.0.1:8002@18002 master - 0 1525102073519 2 connected 5462-10922
+24a3c7107afadafa95132420ac271e1e9a571b5c 127.0.0.1:8001@18001 master - 0 1525102073000 1 connected 0-5461
+0f11017d651c07e8614e9221ecbdbb0f7f4ce438 127.0.0.1:8005@18005 slave 52b2395f63124148fb6f1d777a121a08319efd64 0 1525102072617 4 connected
+2471dfd538f59af44858bc7f7a6ba3eee93b2e30 127.0.0.1:8006@18006 myself,slave cf29d49076528a34604f7b9b447d927f9086196e 0 1525102073000 5 connected
+127.0.0.1:8006&gt; 
+</code></pre><font color="#dd0000"> 到此3主3从redis cluster集群配置完成</font>
+
+<h3 id="四、测试数据（以key-10-111-key-test-111-key-hu-111为例，虚拟槽计算规则当遇到有-时，就会以-里面的字符串来做槽的计算：slot-CRC16-key-amp-16383-）"><a href="#四、测试数据（以key-10-111-key-test-111-key-hu-111为例，虚拟槽计算规则当遇到有-时，就会以-里面的字符串来做槽的计算：slot-CRC16-key-amp-16383-）" class="headerlink" title="四、测试数据（以key:{10}:111,key:{test}:111,key:{hu}:111为例，虚拟槽计算规则当遇到有{}时，就会以{}里面的字符串来做槽的计算：slot = CRC16(key)&amp;16383 ）"></a>四、测试数据（以key:{10}:111,key:{test}:111,key:{hu}:111为例，虚拟槽计算规则当遇到有{}时，就会以{}里面的字符串来做槽的计算：slot = CRC16(key)&amp;16383 ）</h3><pre><code>#使用 CLUSTER KEYSLOT 来查看key会被分配到那个槽中
+127.0.0.1:8001&gt; CLUSTER KEYSLOT key:{10}:111
+(integer) 247            #247槽 属于master_1
+127.0.0.1:8001&gt; CLUSTER KEYSLOT key:{test}:111
+(integer) 6918            #6918槽 属于master_2
+127.0.0.1:8001&gt; CLUSTER KEYSLOT key:{hu}:111
+(integer) 11441            #11441槽 属于master_3
+127.0.0.1:8001&gt; 
+#分配为以上3个key设置对应的value。
+127.0.0.1:8001&gt; set key:{10}:111 value:{10}:111
+OK
+127.0.0.1:8001&gt; set key:{test}:111 value:{test}:111                #slot 属于master_2
+-&gt; Redirected to slot [6918] located at 127.0.0.1:8002            #在master_1上设置，重定向到了master_2上
+OK
+127.0.0.1:8002&gt; set key:{hu}:111 value:{hu}:111                    #slot 属于master_3
+-&gt; Redirected to slot [11441] located at 127.0.0.1:8003            #在master_2上设置，重定向到了master_3上
+OK
+127.0.0.1:8003&gt; 
+# 获取以上设置的value，连接8001节点
+root@izbp13cqwumhn4wi93is2wz:/home/redis-4.0.8# ./src/redis-cli -c -p 8001
+127.0.0.1:8001&gt; 
+127.0.0.1:8001&gt; get key:{10}:111            #slot 属于master_1，获取时能在本机直接取到value
+&quot;value:{10}:111&quot;
+127.0.0.1:8001&gt;     
+127.0.0.1:8001&gt; get key:{test}:111            #slot 属于master_2，获取时重定向到master_2中去取value
+-&gt; Redirected to slot [6918] located at 127.0.0.1:8002
+&quot;value:{test}:111&quot;
+127.0.0.1:8002&gt; 
+127.0.0.1:8002&gt; get key:{hu}:111            #slot 属于master_3，获取时重定向到master_3中去取value
+-&gt; Redirected to slot [11441] located at 127.0.0.1:8003
+&quot;value:{hu}:111&quot;
+127.0.0.1:8003&gt; 
+</code></pre><font color="#dd0000"> 测试完成</font>
+
+
+
+
+
+  </section>
+
+</article>
+
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2018/05/27/mysql_replication_docker/" title="MySQL Replication 集群">MySQL Replication 集群</a></h2>
+                <p class="excerpt">
+                
+                一、介绍为了保证mysql server的高可用，避免单点故障而造成整个系统不可用，Mysql提供了 Replication主从备份机制来解决单点故障。
+Mysql Replication提供多个服务器节点共同对外提供服务而组成的集群，每个节点都保存有一份完整的数据。
+当集群中的某一个节点出现故障不
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2018-05-27T03:00:25.000Z" class="post-list__meta--date date">2018-05-27</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/05/27/mysql_replication_docker/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2018/04/01/mongodb_sharding_inDocker/" title="Docker中搭建mongodb分片副本集集群 (mongodb sharding repliset cluster)。">Docker中搭建mongodb分片副本集集群 (mongodb sharding repliset cluster)。</a></h2>
+                <p class="excerpt">
+                
+                一、概念：sharded 集群由 shard、mongos、config server 三部分组成。 
+二、本示例中的cluster组成如下（所有实例都在docker中创建,事先已经安在docker中安装好mongodb数据库）。docker中启动了10个容器，每个容器实例是一个Ubuntu系统，u
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2018-04-01T02:01:25.000Z" class="post-list__meta--date date">2018-04-01</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/04/01/mongodb_sharding_inDocker/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+  <!--  -->
+
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNTExNi8xMTY1MQ==">
+    <script type="text/javascript">
+        (function(d, s) {
+            var j, e = d.getElementsByTagName(s)[0];
+
+            if (typeof LivereTower === 'function') {
+                return;
+            }
+
+            j = d.createElement(s);
+            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+            j.async = true;
+
+            e.parentNode.insertBefore(j, e);
+        })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    
+    
+</footer>
+
+
+        </div>
+    </div>
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    
+</body>
+</html>

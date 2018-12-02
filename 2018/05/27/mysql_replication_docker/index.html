@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>MySQL Replication 集群 | Bboymars</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="喜欢运动类型的活动">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="MySQL Replication 集群 | Bboymars">
+    <meta name="twitter:description" content="喜欢运动类型的活动">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="MySQL Replication 集群 | Bboymars">
+    <meta property="og:description" content="喜欢运动类型的活动">
+
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+
+    <link rel="canonical" href="http://bboymars.coding.me/2018/05/27/mysql_replication_docker/"/>
+
+                 
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Bboymars 的主页"><img src="/images/avatar.jpg" width="80" alt="Bboymars logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Bboymars">Bboymars</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">从事Java、IOS开发</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">喜欢运动类型的活动</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/hu5675" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div> 
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2018-05-27T03:00:25.000Z" class="post-list__meta--date date">2018-05-27</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title">MySQL Replication 集群</h1>
+  </header>
+
+  <section class="post">
+    <h3 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h3><pre><code>为了保证mysql server的高可用，避免单点故障而造成整个系统不可用，Mysql提供了 Replication主从备份机制来解决单点故障。
+Mysql Replication提供多个服务器节点共同对外提供服务而组成的集群，每个节点都保存有一份完整的数据。
+当集群中的某一个节点出现故障不可用时，集群中的其他节点还可以继续对外提供服务，通过这种方式来保存Mysql Server的高可用。
+Mysql 的 Replication 是一个异步的复制过程，从一个 Mysql instace(我们称之为 Master)复制到另一个Mysql instance(我们称之 Slave)。
+在 Master 与 Slave 之间的 实现整个复制过程主要由三个线程来完成， 其中两个线程Sql(线程和IO线程)在Slave 端， 另外一个线程(IO 线程)在 Master 端。
+</code></pre><h3 id="二、主从集群架构"><a href="#二、主从集群架构" class="headerlink" title="二、主从集群架构"></a>二、主从集群架构</h3><h4 id="A-主从复制架构——（Master-Slaves"><a href="#A-主从复制架构——（Master-Slaves" class="headerlink" title="A:主从复制架构——（Master-Slaves)"></a>A:主从复制架构——（Master-Slaves)</h4><p><img src="/images/mysql_replication_docker/1.png" alt=""> </p>
+<h4 id="B-双主复制架构——（Dual-Master"><a href="#B-双主复制架构——（Dual-Master" class="headerlink" title="B:双主复制架构——（Dual Master)"></a>B:双主复制架构——（Dual Master)</h4><p><img src="/images/mysql_replication_docker/2.png" alt=""> </p>
+<h4 id="C-级联复制架构——（Master-Slaves-Slaves"><a href="#C-级联复制架构——（Master-Slaves-Slaves" class="headerlink" title="C:级联复制架构——（Master-Slaves-Slaves)"></a>C:级联复制架构——（Master-Slaves-Slaves)</h4><p><img src="/images/mysql_replication_docker/3.png" alt=""> </p>
+<h4 id="D-双主和级联复制结合架构——（Master-Master-Slaves"><a href="#D-双主和级联复制结合架构——（Master-Master-Slaves" class="headerlink" title="D:双主和级联复制结合架构——（Master-Master-Slaves)"></a>D:双主和级联复制结合架构——（Master-Master-Slaves)</h4><p><img src="/images/mysql_replication_docker/4.png" alt=""></p>
+<h3 id="三、模拟搭建《D》集群架构"><a href="#三、模拟搭建《D》集群架构" class="headerlink" title="三、模拟搭建《D》集群架构"></a>三、模拟搭建《D》集群架构</h3><p><img src="/images/mysql_replication_docker/8.png" alt=""></p>
+<h4 id="1）环境准备-docker-mysql-5-5-镜像-（mysql镜像中已经安装了mysql数据库，并且设置了root用户的密码、所有权限以及远程访问）"><a href="#1）环境准备-docker-mysql-5-5-镜像-（mysql镜像中已经安装了mysql数据库，并且设置了root用户的密码、所有权限以及远程访问）" class="headerlink" title="1）环境准备: docker mysql_5.5 镜像 （mysql镜像中已经安装了mysql数据库，并且设置了root用户的密码、所有权限以及远程访问）"></a>1）环境准备: docker mysql_5.5 镜像 （mysql镜像中已经安装了mysql数据库，并且设置了root用户的密码、所有权限以及远程访问）</h4><p><img src="/images/mysql_replication_docker/5.png" alt=""></p>
+<h4 id="2-根据mysql镜像启动3个容器实例"><a href="#2-根据mysql镜像启动3个容器实例" class="headerlink" title="2) 根据mysql镜像启动3个容器实例"></a>2) 根据mysql镜像启动3个容器实例</h4><pre><code>docker run --name master_1 -it -p 13306:3306 ubuntu:mysql_5.5
+docker run --name master_2 -it -p 13307:3306 ubuntu:mysql_5.5     #新窗口执行
+docker run --name slave_1_1 -it -p 13308:3306 ubuntu:mysql_5.5     #新窗口执行
+</code></pre><p><img src="/images/mysql_replication_docker/6.png" alt=""></p>
+<h4 id="3）配置master-1-内部ip：172-17-0-16"><a href="#3）配置master-1-内部ip：172-17-0-16" class="headerlink" title="3）配置master_1   内部ip：172.17.0.16"></a>3）配置master_1   内部ip：172.17.0.16</h4><pre><code>docker exec -it 96eee3e421dc /bin/bash   #进入master容器
+ifconfig            #ip查看
+echo &apos;&apos; &gt; /etc/my.cnf         #清空mysql配置文件my.cnf
+vim /etc/my.cnf         #重新编辑my.cnf  输入下面内容并保存退出
+
+#############
+
+[client]
+port            = 3306
+socket          = /tmp/mysql.sock
+
+[mysqld]
+port            = 3306
+socket          = /tmp/mysql.sock
+skip-external-locking
+key_buffer_size = 16M
+max_allowed_packet = 1M
+table_open_cache = 64
+sort_buffer_size = 512K
+net_buffer_length = 8K
+read_buffer_size = 256K
+read_rnd_buffer_size = 512K
+myisam_sort_buffer_size = 8M
+
+log-bin=mysql-bin                    #开启binlog日志 用于主从同步
+binlog-do-db=sakila                    #同步数据库 sakila
+binlog_format=mixed
+
+server-id       = 1                    #服务id，必须唯一
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+
+[myisamchk]
+key_buffer_size = 20M
+sort_buffer_size = 20M
+read_buffer = 2M
+write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout
+
+#############
+
+cd /usr/local/mysql             #进入mysql安装目录
+./bin/mysqld_safe &amp;                #启动mysql
+</code></pre><h5 id="使用客户端工具Navicat-测试master-1启动成功、并准备需要同步的数据库及数据"><a href="#使用客户端工具Navicat-测试master-1启动成功、并准备需要同步的数据库及数据" class="headerlink" title="使用客户端工具Navicat 测试master_1启动成功、并准备需要同步的数据库及数据"></a>使用客户端工具Navicat 测试master_1启动成功、并准备需要同步的数据库及数据</h5><p><img src="/images/mysql_replication_docker/9.png" alt=""><br>执行数据库schema文件和数据文件：<a href="/images/mysql_replication_docker/sakila-schema.sql">结构文件sakila-schema</a>、<a href="/images/mysql_replication_docker/sakila-data.sql">数据文件sakila-data</a><br>执行之后最终结果<br><img src="/images/mysql_replication_docker/10.png" alt=""></p>
+<h5 id="创建一个用户用于master-2从master-1中同步数据"><a href="#创建一个用户用于master-2从master-1中同步数据" class="headerlink" title="创建一个用户用于master_2从master_1中同步数据"></a>创建一个用户用于master_2从master_1中同步数据</h5><pre><code>用户名: repl_1_2
+密码: repl_1_2
+
+./bin/mysql -uroot -p             #连接mysql 服务
+CREATE USER &apos;repl_1_2&apos;@&apos;172.17.0.17&apos; IDENTIFIED BY &apos;repl_1_2&apos;;   #172.17.0.17 是master_2的ip
+GRANT REPLICATION SLAVE ON *.* TO &apos;repl_1_2&apos;@&apos;172.17.0.17&apos; IDENTIFIED BY &apos;repl_1_2&apos;;     #分配权限
+flush privileges;   #刷新权限
+</code></pre><h5 id="创建一个用户用于-slave-1-1-从master-1中同步数据"><a href="#创建一个用户用于-slave-1-1-从master-1中同步数据" class="headerlink" title="创建一个用户用于 slave_1_1 从master_1中同步数据"></a>创建一个用户用于 slave_1_1 从master_1中同步数据</h5><pre><code>用户名: repl_1_11
+密码: repl_1_11
+
+./bin/mysql -uroot -p             #连接mysql 服务
+CREATE USER &apos;repl_1_11&apos;@&apos;172.17.0.18&apos; IDENTIFIED BY &apos;repl_1_11&apos;;   #172.17.0.18 是 slave_1_1 的ip
+GRANT REPLICATION SLAVE ON *.* TO &apos;repl_1_11&apos;@&apos;172.17.0.18&apos; IDENTIFIED BY &apos;repl_1_11&apos;;     #分配权限
+flush privileges;   #刷新权限
+</code></pre><h4 id="4）配置master-2-内部ip：172-17-0-17"><a href="#4）配置master-2-内部ip：172-17-0-17" class="headerlink" title="4）配置master_2        内部ip：172.17.0.17"></a>4）配置master_2        内部ip：172.17.0.17</h4><pre><code>docker exec -it 12031981101f /bin/bash   #进入master容器
+echo &apos;&apos; &gt; /etc/my.cnf         #清空mysql配置文件my.cnf
+vim /etc/my.cnf         #重新编辑my.cnf  输入下面内容并保存退出
+
+#######
+
+[client]
+port            = 3306
+socket          = /tmp/mysql.sock
+
+[mysqld]
+port            = 3306
+socket          = /tmp/mysql.sock
+skip-external-locking
+key_buffer_size = 16M
+max_allowed_packet = 1M
+table_open_cache = 64
+sort_buffer_size = 512K
+net_buffer_length = 8K
+read_buffer_size = 256K
+read_rnd_buffer_size = 512K
+myisam_sort_buffer_size = 8M
+
+log-bin=mysql-bin
+binlog-do-db=sakila
+binlog_format=mixed
+
+server-id       = 2
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+
+[myisamchk]
+key_buffer_size = 20M
+sort_buffer_size = 20M
+read_buffer = 2M
+write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout
+
+#######
+
+cd /usr/local/mysql             #进入mysql安装目录
+./bin/mysqld_safe &amp;                #启动mysql
+</code></pre><h5 id="使用客户端工具Navicat-测试master-2连接，现在没有sakila数据结构和数据"><a href="#使用客户端工具Navicat-测试master-2连接，现在没有sakila数据结构和数据" class="headerlink" title="使用客户端工具Navicat 测试master_2连接，现在没有sakila数据结构和数据"></a>使用客户端工具Navicat 测试master_2连接，现在没有sakila数据结构和数据</h5><p><img src="/images/mysql_replication_docker/11.png" alt=""></p>
+<h5 id="创建一个用户用于master-1从master-2中同步数据"><a href="#创建一个用户用于master-1从master-2中同步数据" class="headerlink" title="创建一个用户用于master_1从master_2中同步数据"></a>创建一个用户用于master_1从master_2中同步数据</h5><pre><code>用户名: repl_2_1
+密码: repl_2_1
+
+./bin/mysql -uroot -p             #连接mysql 服务
+CREATE USER &apos;repl_2_1&apos;@&apos;172.17.0.16&apos; IDENTIFIED BY &apos;repl_2_1&apos;;   #172.17.0.16 是 master_1 的ip
+GRANT REPLICATION SLAVE ON *.* TO &apos;repl_2_1&apos;@&apos;172.17.0.16&apos; IDENTIFIED BY &apos;repl_2_1&apos;;     #分配权限
+flush privileges;   #刷新权限
+</code></pre><h5 id="连接mysql服务并配置master-1作为master-2的主库"><a href="#连接mysql服务并配置master-1作为master-2的主库" class="headerlink" title="连接mysql服务并配置master_1作为master_2的主库"></a>连接mysql服务并配置master_1作为master_2的主库</h5><pre><code>./bin/mysql -uroot -p
+CHANGE MASTER TO MASTER_HOST=&apos;172.17.0.16&apos;, MASTER_USER=&apos;repl_1_2&apos;, MASTER_PASSWORD=&apos;repl_1_2&apos;;   # 配置master_1 为自己的主库
+start slave;                #开启备份
+show slave status;          #查看备份状态  Slave_IO_Running | Slave_SQL_Running   都为yes 则配置成功
+</code></pre><h5 id="使用客户端工具Navicat-检查master-2中是否有sakila数据库和数据"><a href="#使用客户端工具Navicat-检查master-2中是否有sakila数据库和数据" class="headerlink" title="使用客户端工具Navicat 检查master_2中是否有sakila数据库和数据"></a>使用客户端工具Navicat 检查master_2中是否有sakila数据库和数据</h5><p><img src="/images/mysql_replication_docker/12.png" alt=""><br>可以看到master_2数据已经同步下来</p>
+<h5 id="使用客户端工具Navicat-测试修改master-1的数据，检查是否同步更新到master-2中"><a href="#使用客户端工具Navicat-测试修改master-1的数据，检查是否同步更新到master-2中" class="headerlink" title="使用客户端工具Navicat 测试修改master_1的数据，检查是否同步更新到master_2中"></a>使用客户端工具Navicat 测试修改master_1的数据，检查是否同步更新到master_2中</h5><p><img src="/images/mysql_replication_docker/1.gif" alt=""></p>
+<h4 id="5）配置master-2-作为-master-1的主库"><a href="#5）配置master-2-作为-master-1的主库" class="headerlink" title="5）配置master_2 作为 master_1的主库"></a>5）配置master_2 作为 master_1的主库</h4><h5 id="连接-master-1-mysql服务并配置master-2作为master-1的主库"><a href="#连接-master-1-mysql服务并配置master-2作为master-1的主库" class="headerlink" title="连接 master_1 mysql服务并配置master_2作为master_1的主库"></a>连接 master_1 mysql服务并配置master_2作为master_1的主库</h5><pre><code>./bin/mysql -uroot -p      #连接master_1  
+CHANGE MASTER TO MASTER_HOST=&apos;172.17.0.17&apos;, MASTER_USER=&apos;repl_2_1&apos;, MASTER_PASSWORD=&apos;repl_2_1&apos;;   #配置主库
+start slave;   #开始同步
+show slave status;          #查看备份状态  Slave_IO_Running | Slave_SQL_Running   都为yes 则配置成功
+</code></pre><h5 id="使用客户端工具Navicat-测试修改-master-1-的数据，检查是否同步更新到-master-2-中、测试修改-master-2-的数据，检查是否同步更新到-master-1-中"><a href="#使用客户端工具Navicat-测试修改-master-1-的数据，检查是否同步更新到-master-2-中、测试修改-master-2-的数据，检查是否同步更新到-master-1-中" class="headerlink" title="使用客户端工具Navicat 测试修改 master_1 的数据，检查是否同步更新到 master_2 中、测试修改 master_2 的数据，检查是否同步更新到 master_1 中"></a>使用客户端工具Navicat 测试修改 master_1 的数据，检查是否同步更新到 master_2 中、测试修改 master_2 的数据，检查是否同步更新到 master_1 中</h5><p><img src="/images/mysql_replication_docker/2.gif" alt=""></p>
+<h4 id="到此-Dual-Master-Mysql双主同步-配置完成"><a href="#到此-Dual-Master-Mysql双主同步-配置完成" class="headerlink" title="到此 Dual Master (Mysql双主同步) 配置完成"></a>到此 Dual Master (Mysql双主同步) 配置完成</h4><h4 id="6）配置slave-1-1-使其成为master-1的从库"><a href="#6）配置slave-1-1-使其成为master-1的从库" class="headerlink" title="6）配置slave_1_1, 使其成为master_1的从库"></a>6）配置slave_1_1, 使其成为master_1的从库</h4><h5 id="配置slave-1-1，内部ip：172-17-0-18"><a href="#配置slave-1-1，内部ip：172-17-0-18" class="headerlink" title="配置slave_1_1，内部ip：172.17.0.18"></a>配置slave_1_1，内部ip：172.17.0.18</h5><pre><code>docker exec -it f5e6eb4a50ee /bin/bash   #进入master容器
+echo &apos;&apos; &gt; /etc/my.cnf         #清空mysql配置文件my.cnf
+vim /etc/my.cnf         #重新编辑my.cnf  输入下面内容并保存退出
+
+#######
+
+[client]
+port            = 3306
+socket          = /tmp/mysql.sock
+
+[mysqld]
+port            = 3306
+socket          = /tmp/mysql.sock
+skip-external-locking
+key_buffer_size = 16M
+max_allowed_packet = 1M
+table_open_cache = 64
+sort_buffer_size = 512K
+net_buffer_length = 8K
+read_buffer_size = 256K
+read_rnd_buffer_size = 512K
+myisam_sort_buffer_size = 8M
+
+
+server-id       = 11
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+
+[myisamchk]
+key_buffer_size = 20M
+sort_buffer_size = 20M
+read_buffer = 2M
+write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout
+
+#######
+
+cd /usr/local/mysql             #进入mysql安装目录
+./bin/mysqld_safe &amp;                #启动mysql
+</code></pre><h5 id="使用客户端工具Navicat-测试连接-slave-1-1"><a href="#使用客户端工具Navicat-测试连接-slave-1-1" class="headerlink" title="使用客户端工具Navicat 测试连接 slave_1_1"></a>使用客户端工具Navicat 测试连接 slave_1_1</h5><p><img src="/images/mysql_replication_docker/13.png" alt=""></p>
+<h5 id="连接-slave-1-1-mysql服务并配置-master-1-作为-slave-1-1-的主库"><a href="#连接-slave-1-1-mysql服务并配置-master-1-作为-slave-1-1-的主库" class="headerlink" title="连接 slave_1_1 mysql服务并配置 master_1 作为 slave_1_1 的主库"></a>连接 slave_1_1 mysql服务并配置 master_1 作为 slave_1_1 的主库</h5><pre><code>./bin/mysql -uroot -p      #连接 master_1  
+CHANGE MASTER TO MASTER_HOST=&apos;172.17.0.16&apos;, MASTER_USER=&apos;repl_1_11&apos;, MASTER_PASSWORD=&apos;repl_1_11&apos;;  #配置主库
+start slave;   #开始同步
+show slave status;          #查看备份状态  Slave_IO_Running | Slave_SQL_Running   都为yes 则配置成功
+</code></pre><h5 id="使用客户端工具Navicat-测试连接-slave-1-1-可以看到master-1中的数据同步到了slave-1-1"><a href="#使用客户端工具Navicat-测试连接-slave-1-1-可以看到master-1中的数据同步到了slave-1-1" class="headerlink" title="使用客户端工具Navicat 测试连接 slave_1_1 ,可以看到master_1中的数据同步到了slave_1_1"></a>使用客户端工具Navicat 测试连接 slave_1_1 ,可以看到master_1中的数据同步到了slave_1_1</h5><p><img src="/images/mysql_replication_docker/14.png" alt=""></p>
+<h5 id="返回来看master-1中的数据，发现有一行记录没有同步到-slave-1-1-中去"><a href="#返回来看master-1中的数据，发现有一行记录没有同步到-slave-1-1-中去" class="headerlink" title="返回来看master_1中的数据，发现有一行记录没有同步到 slave_1_1 中去"></a>返回来看master_1中的数据，发现有一行记录没有同步到 slave_1_1 中去</h5><p><img src="/images/mysql_replication_docker/15.png" alt=""></p>
+<h5 id="回忆之前，ED-33333-数据的修改是在master-2上主动修改，然后同步master-2上修改的binlog到master-1的relay-log上，而master-1根据relay-log的修改记录来修改数据，这个修改数据的”动作“并没有在master-1上产生binlog，所以没有同步到slave-1-1中去。"><a href="#回忆之前，ED-33333-数据的修改是在master-2上主动修改，然后同步master-2上修改的binlog到master-1的relay-log上，而master-1根据relay-log的修改记录来修改数据，这个修改数据的”动作“并没有在master-1上产生binlog，所以没有同步到slave-1-1中去。" class="headerlink" title="回忆之前，ED_33333 数据的修改是在master_2上主动修改，然后同步master_2上修改的binlog到master_1的relay_log上，而master_1根据relay_log的修改记录来修改数据，这个修改数据的”动作“并没有在master_1上产生binlog，所以没有同步到slave_1_1中去。"></a>回忆之前，ED_33333 数据的修改是在master_2上主动修改，然后同步master_2上修改的binlog到master_1的relay_log上，而master_1根据relay_log的修改记录来修改数据，这个修改数据的”动作“并没有在master_1上产生binlog，所以没有同步到slave_1_1中去。</h5><h5 id="解决上述问题需要在master-1上的mysql服务器开启log-slave-updates配置，修改-etc-my-cnf，加上-log-slave-updates-1-并重启mysql"><a href="#解决上述问题需要在master-1上的mysql服务器开启log-slave-updates配置，修改-etc-my-cnf，加上-log-slave-updates-1-并重启mysql" class="headerlink" title="解决上述问题需要在master_1上的mysql服务器开启log_slave_updates配置，修改/etc/my.cnf，加上 log_slave_updates=1 并重启mysql"></a>解决上述问题需要在master_1上的mysql服务器开启log_slave_updates配置，修改/etc/my.cnf，加上 log_slave_updates=1 并重启mysql</h5><h5 id="使用客户端工具Navicat-测试修改-master-1-和-master-2-上的数据，看是否都同步到slave-1-1中"><a href="#使用客户端工具Navicat-测试修改-master-1-和-master-2-上的数据，看是否都同步到slave-1-1中" class="headerlink" title="使用客户端工具Navicat 测试修改 master_1 和 master_2 上的数据，看是否都同步到slave_1_1中"></a>使用客户端工具Navicat 测试修改 master_1 和 master_2 上的数据，看是否都同步到slave_1_1中</h5><p><img src="/images/mysql_replication_docker/3.gif" alt=""></p>
+<h4 id="到此-Dual-Master-Slave-架构搭建完成"><a href="#到此-Dual-Master-Slave-架构搭建完成" class="headerlink" title="到此 Dual Master Slave 架构搭建完成"></a>到此 Dual Master Slave 架构搭建完成</h4>
+  </section>
+
+</article>
+
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2018/07/10/mysql_cluster_inDocker/" title="Docker模拟搭建MySql Cluster集群">Docker模拟搭建MySql Cluster集群</a></h2>
+                <p class="excerpt">
+                
+                一、介绍Mysql Cluster 是一种技术，其主要功能是在无共享的相关系统中部署内存中数据库的Cluster，其主要是通过NDB Cluster（简称NDB）存储引擎来实现的。
+NDB 存储引擎也叫NDB Cluster 存储引擎，主要用于MySQL Cluster 分布式集群环境，Cluste
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2018-07-10T02:01:25.000Z" class="post-list__meta--date date">2018-07-10</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/07/10/mysql_cluster_inDocker/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2018/05/01/redis_cluster_inDocker/" title="利用docker搭建redis cluster(集群) ——3主3从">利用docker搭建redis cluster(集群) ——3主3从</a></h2>
+                <p class="excerpt">
+                
+                一、介绍Redis Cluster是Redis的分布式解决方案，在Redis 3.0版本正式推出的，
+有效解决了Redis分布式方面的需求。当遇到单机内存、并发、流量等瓶颈时，可以采用Cluster架构达到负载均衡的目的。
+Redis Cluster采用虚拟分槽，虚拟槽分区巧妙地使用了哈希空间，使用
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2018-05-01T02:01:25.000Z" class="post-list__meta--date date">2018-05-01</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/05/01/redis_cluster_inDocker/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+  <!--  -->
+
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNTExNi8xMTY1MQ==">
+    <script type="text/javascript">
+        (function(d, s) {
+            var j, e = d.getElementsByTagName(s)[0];
+
+            if (typeof LivereTower === 'function') {
+                return;
+            }
+
+            j = d.createElement(s);
+            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+            j.async = true;
+
+            e.parentNode.insertBefore(j, e);
+        })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    
+    
+</footer>
+
+
+        </div>
+    </div>
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    
+</body>
+</html>

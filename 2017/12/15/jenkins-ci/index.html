@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Jenkins 持续集成工具使用介绍 | Bboymars</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="喜欢运动类型的活动">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Jenkins 持续集成工具使用介绍 | Bboymars">
+    <meta name="twitter:description" content="喜欢运动类型的活动">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Jenkins 持续集成工具使用介绍 | Bboymars">
+    <meta property="og:description" content="喜欢运动类型的活动">
+
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+
+    <link rel="canonical" href="http://bboymars.coding.me/2017/12/15/jenkins-ci/"/>
+
+                 
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Bboymars 的主页"><img src="/images/avatar.jpg" width="80" alt="Bboymars logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Bboymars">Bboymars</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">从事Java、IOS开发</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">喜欢运动类型的活动</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/hu5675" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div> 
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2017-12-15T02:01:25.000Z" class="post-list__meta--date date">2017-12-15</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title">Jenkins 持续集成工具使用介绍</h1>
+  </header>
+
+  <section class="post">
+    <h4 id="需求缘起"><a href="#需求缘起" class="headerlink" title="需求缘起"></a>需求缘起</h4><p>在软件开发过程中尤其在进行到测试阶段时候，开发人员需要打包提交到测试人员 ——&gt; 测试人员发现bug并报告给开发人员 ——&gt; 开发人员fix bug并再次打包提交到测试人员。反复这个流程直到没有bug为止。</p>
+<h4 id="传统打包方法-1-（全手动）"><a href="#传统打包方法-1-（全手动）" class="headerlink" title="传统打包方法-1 （全手动）"></a>传统打包方法-1 （全手动）</h4><p>1、本地编译。</p>
+<p>2、本地导出war。</p>
+<p>3、上传war到服务器。</p>
+<p>4、重启应用服务。</p>
+<h4 id="传统打包方法-2-（半自动）"><a href="#传统打包方法-2-（半自动）" class="headerlink" title="传统打包方法-2 （半自动）"></a>传统打包方法-2 （半自动）</h4><p>1、本地提交最新代码到版本管理服务器。</p>
+<p>2、ssh登录远程服务器。</p>
+<p>3、在远程服务器拉取最新代码。</p>
+<p>4、使用mvn、sh脚本等构建war。</p>
+<p>5、重启应用服务。</p>
+<h5 id="传统打包方法缺点"><a href="#传统打包方法缺点" class="headerlink" title="传统打包方法缺点"></a>传统打包方法缺点</h5><p>1、每次需要手动操作。</p>
+<p>2、每次需要浪费时间（根据业务复杂度耗时不同）。特别在测试阶段这种浪费时间的打包流程会很频繁。</p>
+<h5 id="既然传统方案会浪费大量的非业务相关的开发时间，那有没有其他方案能减少这种浪费？"><a href="#既然传统方案会浪费大量的非业务相关的开发时间，那有没有其他方案能减少这种浪费？" class="headerlink" title="既然传统方案会浪费大量的非业务相关的开发时间，那有没有其他方案能减少这种浪费？"></a>既然传统方案会浪费大量的非业务相关的开发时间，那有没有其他方案能减少这种浪费？</h5><h5 id="持续集成工具：Jenkins"><a href="#持续集成工具：Jenkins" class="headerlink" title="持续集成工具：Jenkins"></a>持续集成工具：Jenkins</h5><h3 id="什么是Jenkins？"><a href="#什么是Jenkins？" class="headerlink" title="什么是Jenkins？"></a>什么是Jenkins？</h3><p>Jenkins是一个可扩展的持续集成引擎</p>
+<p>软件构建发布自动化</p>
+<p>自动化测试</p>
+<p>支持构建IOS、Android、Java等平台。</p>
+<p>运行原理如下图：</p>
+<p><img src="/images/jenkins/jenkins-1.png" alt="运行图"></p>
+<h3 id="Jenkins的安装-（Mac为例）"><a href="#Jenkins的安装-（Mac为例）" class="headerlink" title="Jenkins的安装 （Mac为例）"></a>Jenkins的安装 （Mac为例）</h3><p>1、首先安装Java JDK。</p>
+<p>   <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">Java JDK下载</a><br>   在命令行中输入：java -version 查看jdk信息<br>   java version “1.8.0_121”<br>   Java(TM) SE Runtime Environment (build 1.8.0_121-b13)<br>   Java HotSpot(TM) 64-Bit Server VM (build 25.121-b13, mixed mode)</p>
+<p>2、安装Tomcat。</p>
+<p>   <a href="http://tomcat.apache.org/download-80.cgi" target="_blank" rel="noopener">Tomcat 下载</a><br>   根据各自情况下载tomcat，并解压到某一目录。</p>
+<p>   命令行进入tomcat/bin 目录下，修改所有sh文件为可执行 ： chmod +x *.sh<br>   执行startup.sh文件启动tomcat: ./startup.sh<br>   在浏览器中输入localhost:8080 出现tomcat界面说明安装成功。   </p>
+<p>3、java maven项目需要要安装maven，IOS项目需要Mac电脑并安装XCode。</p>
+<p>   <a href="http://maven.apache.org/download.cgi" target="_blank" rel="noopener">Maven下载</a><br>   根据各自情况下载tMaven，并解压到某一目录。<br>   配置maven环境变量<br>   编译 ~/.bash_profile 文件添加2行并保存。</p>
+<p>   export M2_HOME=/Users/mars/Documents/java/apache-maven-3.3.9<br>   export PATH=$PATH:$M2_HOME/bin</p>
+<p>   在cmd中输入 mvn -v<br>   Maven home: /Users/mars/Documents/java/apache-maven-3.3.9<br>   Java version: 1.8.0_121, vendor: Oracle Corporation<br>   Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_121.jdk/Contents/Home/jre<br>   Default locale: zh_CN, platform encoding: UTF-8<br>   OS name: “mac os x”, version: “10.12.5”, arch: “x86_64”, family: “mac”<br>   说明安装成功</p>
+<p>4、下载Jenkins.war 放到tomcat webapps目录下。</p>
+<p>   <a href="https://jenkins.io/download/" target="_blank" rel="noopener">Jenkins下载</a><br>   下载Jenkins.war 放到tomcat/webapps目录下。<br>   重启tomcat。</p>
+<p>   浏览器中输入：<a href="http://localhost:8080/jenkins" target="_blank" rel="noopener">http://localhost:8080/jenkins</a>  出现如下界面说明Jenkins安装成功。<br>   <img src="/images/jenkins/jenkins-2.png" alt="运行图"></p>
+<h3 id="Jenkins使用"><a href="#Jenkins使用" class="headerlink" title="Jenkins使用"></a>Jenkins使用</h3><p><br><br>1、浏览器输入<a href="http://localhost:8080/jenkins" target="_blank" rel="noopener">http://localhost:8080/jenkins</a>  并输入初始密码（/Users/mars/.jenkins/secrets/initialAdminPassword 文件中）进入如下界面：<br>   <img src="/images/jenkins/jenkins-3.png" alt="运行图"><br><br><br>2、点击第一个选择，安装Jenkins建议安装的插件(如下图):<br>   <img src="/images/jenkins/jenkins-4.png" alt="运行图"><br><br><br>3、插件安装成功后创建换一个管理员密码，这样避免每次都输入初始密码，也可以跳过此步骤进入主界面之后再行创建管理员账号（如下图):<br>   <img src="/images/jenkins/jenkins-5.png" alt="运行图"><br><br><br>4、在此，先行创建管理员账号之后进入主界面（如下图）：<br>   <img src="/images/jenkins/jenkins-6.png" alt="运行图"><br>   <img src="/images/jenkins/jenkins-7.png" alt="运行图"><br><br><br>5、设置Jenkins的工作目录：系统管理——&gt; 系统设置——&gt; 主目录展开：<br>   <img src="/images/jenkins/jenkins-8.png" alt="运行图"><br><br><br>6、其他配置暂不管，现在创建一个IOS的工作空间：My Views ——&gt; 创建一个新任务<br>   <img src="/images/jenkins/jenkins-9.png" alt="运行图"><br><br><br>7、输入项目名、构建一个自由风格项目，点击OK。<br>   <img src="/images/jenkins/jenkins-10.png" alt="运行图"><br><br><br>8、配置源码管理地址。<br>   a) 添加credential<br>   <img src="/images/jenkins/jenkins-11.png" alt="运行图"><br>   b) 配置代码服务器地址<br>   <img src="/images/jenkins/jenkins-12.png" alt="运行图"></p>
+<p><br><br>9、点击保存，回到面板点击立即构建先把服务器代码签到本地。<br>   <img src="/images/jenkins/jenkins-13.png" alt="运行图"><br><br><br>10、打开刚签下来的本地代码，确保可以编译可成功。<br><br><br>11、回到Jenkins配置项目的构建脚本。<br>   <img src="/images/jenkins/jenkins-14.png" alt="运行图"><br>   备：<br>   archive_upload.sh 内容如下:<br>   xcodebuild -workspace Zoharo_swift.xcworkspace -scheme Zoharo_swift -configuration Debug  clean archive -archivePath ZoharoArchive DEVELOPMENT_TEAM=H4FGQGLX69</p>
+<p>   ./xcbuild-safe.sh -exportArchive -archivePath ZoharoArchive.xcarchive -exportOptionsPlist exportOptions.plist -exportPath ZoharoIPA</p>
+<p>   #蒲公英上的User Key<br>   uKey=”78024b5845de2957c313725e00d1e146”</p>
+<p>   #蒲公英上的API Key<br>   apiKey=”7552f5ff809ea22c5452e22da87eea78”</p>
+<p>   #要上传的ipa文件路径<br>   IPA_PATH=”ZoharoIPA/Zoharo_swift.ipa”</p>
+<p>   #执行上传至蒲公英的命令<br>   echo “++++++++++++++upload+++++++++++++”<br>   curl -F “file=@${IPA_PATH}” -F “uKey=${uKey}” -F “_api_key=${apiKey}” <a href="http://www.pgyer.com/apiv1/app/upload" target="_blank" rel="noopener">http://www.pgyer.com/apiv1/app/upload</a><br><br><br>   archive_upload 文件会用到xcbuild-safe.sh 、 exportOptions.plist 两个文件<br>   xcbuild-safe.sh内容如下：</p>
+<p>   which rvm &gt; /dev/null</p>
+<p>   if [[ $? -eq 0 ]]; then<br>      echo “RVM detected, forcing to use system ruby”<br>      [[ -s “$HOME/.rvm/scripts/rvm” ]] &amp;&amp; source “$HOME/.rvm/scripts/rvm”<br>      rvm use system<br>   fi</p>
+<p>   if which rbenv &gt; /dev/null; then<br>      echo “rbenv detected, removing env variables”<br>      rbenv shell system<br>   fi</p>
+<p>   unset RUBYLIB<br>   unset RUBYOPT<br>   unset BUNDLE_BIN_PATH<br>   unset _ORIGINAL_GEM_PATH<br>   unset BUNDLE_GEMFILE</p>
+<p>   unset GEM_HOME<br>   unset GEM_PATH</p>
+<p>   set -x          # echoes commands<br>   xcodebuild “$@” # calls xcodebuild with all the arguments passed to this<br><br><br>   exportOptions.plist内容如下：<br>   <img src="/images/jenkins/jenkins-15.png" alt="运行图"><br><br><br>12、回到面板，点击立即构建，确保构建脚本能构建成功。可以查看构建日志拍错。<br>   <img src="/images/jenkins/jenkins-16.png" alt="运行图"><br>   点击正在构建的任务——&gt;Console Output查看构建日志<br>   <img src="/images/jenkins/jenkins-17.png" alt="运行图"><br><br><br>13、等待构建成功,可以看到打包成功、导出成功、上传蒲同英成功<br>   <img src="/images/jenkins/jenkins-18.png" alt="运行图"><br><br><br>14、以上都需要手动点击立即构建才执行构建，有没有什么办法能不需要登录Jenkins，不点击立即构建就能让其自动构建。（需要安装gitlab插件）<br>   利用gitlab hook设置可在代码提交时自动触发Jenkins构建。<br>   首先先在Jenkins的构建触发器里设置一个构建token。<br>   <img src="/images/jenkins/jenkins-19.png" alt="运行图"><br>   其次登录git服务器点击项目设置里的Webhooks<br>   <img src="/images/jenkins/jenkins-20.png" alt="运行图"><br>   配置url点击add hook<br>   <img src="/images/jenkins/jenkins-21.png" alt="运行图"><br>   点击Test 测试是否配置成功。<br>   <img src="/images/jenkins/jenkins-22.png" alt="运行图"></p>
+<p>15、到现在为此，所有设置已完成。可在本地编辑代码提交到git服务器，测试下是否能自动触发jenkins构建。</p>
+<p>总结:现实开发中可能会很频繁的提交代码，就会很频繁的触发构建。这样会造成大量的流量浪费和服务器资源。<br>   解决方法：单独创建一个构建分支代码，待开发到一定程度需要构建时，本地把正在开发的分支合并到构建分支中提交以触发构建分支的代码构建。</p>
+
+  </section>
+
+</article>
+
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2018/02/15/maven-docker/" title="Maven + Docker + GitLab + Jenkins 构建镜像并提交Docker私有镜像库， 搭建持续集成环境">Maven + Docker + GitLab + Jenkins 构建镜像并提交Docker私有镜像库， 搭建持续集成环境</a></h2>
+                <p class="excerpt">
+                
+                需求缘起在软件开发过程中尤其在进行到测试阶段时候，开发人员需要打包提交到测试人员 ——&amp;gt; 测试人员发现bug并报告给开发人员 ——&amp;gt; 开发人员fix bug并再次打包提交到测试人员。反复这个流程直到没有bug为止。
+环境准备1、本机  java开发环境、Docker、Maven （安装步
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2018-02-15T02:01:25.000Z" class="post-list__meta--date date">2018-02-15</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/02/15/maven-docker/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2017/11/15/tcp-ip/" title="浅析TCP/IP网络基础——引用同事分享">浅析TCP/IP网络基础——引用同事分享</a></h2>
+                <p class="excerpt">
+                
+                现今绝大部分项目中都会用到网络用于数据访问。而在工作中基本用到的都是上层已经封装好的第三方库和一些开源的框架。很多人都只知道怎么使用，对框架底层下网络协议很少真正的去了解。作为一个IT从业者，势必要去了解下网络底层。高楼大厦，起于平川。不积跬步，无以至千里，不积小流，无以成江海。
+什么是TCP/IP
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2017-11-15T02:01:25.000Z" class="post-list__meta--date date">2017-11-15</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/11/15/tcp-ip/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+  <!--  -->
+
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNTExNi8xMTY1MQ==">
+    <script type="text/javascript">
+        (function(d, s) {
+            var j, e = d.getElementsByTagName(s)[0];
+
+            if (typeof LivereTower === 'function') {
+                return;
+            }
+
+            j = d.createElement(s);
+            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+            j.async = true;
+
+            e.parentNode.insertBefore(j, e);
+        })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    
+    
+</footer>
+
+
+        </div>
+    </div>
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    
+</body>
+</html>

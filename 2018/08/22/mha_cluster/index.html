@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>MHA架构模拟搭建 | Bboymars</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="喜欢运动类型的活动">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="MHA架构模拟搭建 | Bboymars">
+    <meta name="twitter:description" content="喜欢运动类型的活动">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="MHA架构模拟搭建 | Bboymars">
+    <meta property="og:description" content="喜欢运动类型的活动">
+
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+
+    <link rel="canonical" href="http://bboymars.coding.me/2018/08/22/mha_cluster/"/>
+
+                 
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Bboymars 的主页"><img src="/images/avatar.jpg" width="80" alt="Bboymars logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Bboymars">Bboymars</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">从事Java、IOS开发</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">喜欢运动类型的活动</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/hu5675" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div> 
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2018-08-22T09:07:00.000Z" class="post-list__meta--date date">2018-08-22</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title">MHA架构模拟搭建</h1>
+  </header>
+
+  <section class="post">
+    <h3 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h3><p><img src="/images/mha_cluster/1.png" alt="运行图"></p>
+<h3 id="MHA介绍"><a href="#MHA介绍" class="headerlink" title="MHA介绍"></a>MHA介绍</h3><pre><code>MHA（Master High Availability）目前在MySQL高可用方面是一个相对成熟的解决方案，它由日本DeNA公司youshimaton（现就职于Facebook公司）开发，
+是一套优秀的作为MySQL高可用性环境下故障切换和主从提升的高可用软件。在MySQL故障切换过程中，MHA能做到在0~30秒之内自动完成数据库的故障切换操作，
+并且在进行故障切换的过程中，MHA能在最大程度上保证数据的一致性，以达到真正意义上的高可用。
+</code></pre><h3 id="MHA提供什么功能"><a href="#MHA提供什么功能" class="headerlink" title="MHA提供什么功能"></a>MHA提供什么功能</h3><pre><code>1、监控主数据库服务器是否可用
+2、当主DB不可用时，从多个从服务器中选举新的主数据库服务器
+3、提供了主从切换和故障转移功能
+</code></pre><h3 id="MHA主从切换过程"><a href="#MHA主从切换过程" class="headerlink" title="MHA主从切换过程"></a>MHA主从切换过程</h3><pre><code>1、尝试从出现故障的主数据库保存二进制日志
+2、从多个备选服务器中选举出新的备选主服务器
+3、在备选主服务器和其他从服务器之间进行同步差异二进制数据
+</code></pre><h3 id="MHA配置步骤"><a href="#MHA配置步骤" class="headerlink" title="MHA配置步骤"></a>MHA配置步骤</h3><pre><code>1、建立主从复制集群
+2、配置集群内所有主机的SSH免认证登录
+3、在数据库主机和监控主机上安装MHA-node软件包
+4、在监控主机上安装MHA-manager软件包，并配置
+</code></pre><h3 id="环境参数说明"><a href="#环境参数说明" class="headerlink" title="环境参数说明"></a>环境参数说明</h3><pre><code>主:                 mha_master_01    192.172.0.11  
+从:                 mha_slave_01     192.172.0.13
+从:                 mha_slave_02     192.172.0.14    
+mha管理节点：        mha_manager         192.172.0.20
+</code></pre><h3 id="搭建主从集群（具体可参照之前文章——MySQL-Replication-集群）"><a href="#搭建主从集群（具体可参照之前文章——MySQL-Replication-集群）" class="headerlink" title="搭建主从集群（具体可参照之前文章——MySQL Replication 集群）"></a>搭建主从集群（具体可参照之前文章——MySQL Replication 集群）</h3><h4 id="1）配置SQL启动SQL服务"><a href="#1）配置SQL启动SQL服务" class="headerlink" title="1）配置SQL启动SQL服务"></a>1）配置SQL启动SQL服务</h4><h6 id="启动3个节点"><a href="#启动3个节点" class="headerlink" title="启动3个节点"></a><font color="#dd0000">启动3个节点</font></h6><pre><code>docker run -it --name mha_master_01 --net=mha_cluster --ip=192.172.0.11 ubuntu:mysql
+
+docker run -it --name mha_slave_01 --net=mha_cluster --ip=192.172.0.13 ubuntu:mysql
+docker run -it --name mha_slave_02 --net=mha_cluster --ip=192.172.0.14 ubuntu:mysql
+</code></pre><h6 id="mha-master-01-配置"><a href="#mha-master-01-配置" class="headerlink" title="mha_master_01 配置"></a><font color="#dd0000">mha_master_01 配置</font></h6><pre><code>vim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+[mysqld]
+server_id=11
+gtid_mode=on
+enforce_gtid_consistency=on
+
+log_bin=master-binlog
+log-slave-updates=1
+binlog_format=row
+
+skip_slave_start=1
+</code></pre><h6 id="mha-slave-01-配置"><a href="#mha-slave-01-配置" class="headerlink" title="mha_slave_01 配置"></a><font color="#dd0000">mha_slave_01 配置</font></h6><pre><code>vim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+[mysqld]
+server_id=13
+gtid_mode=on
+enforce_gtid_consistency=on
+
+log-bin=slave-binlog
+log-slave-updates=1
+binlog_format=row
+
+skip_slave_start=1
+</code></pre><h6 id="mha-slave-02-配置-把server-id改成14"><a href="#mha-slave-02-配置-把server-id改成14" class="headerlink" title="mha_slave_02 配置 把server_id改成14"></a><font color="#dd0000">mha_slave_02 配置 把server_id改成14</font></h6><pre><code>vim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+[mysqld]
+server_id=14
+gtid_mode=on
+enforce_gtid_consistency=on
+
+log-bin=slave-binlog
+log-slave-updates=1
+binlog_format=row
+
+skip_slave_start=1
+</code></pre><h6 id="分别启动3个节点中SQL服务"><a href="#分别启动3个节点中SQL服务" class="headerlink" title="分别启动3个节点中SQL服务"></a><font color="#dd0000">分别启动3个节点中SQL服务</font></h6><pre><code>service mysql start
+</code></pre><h4 id="2）配置主从集群"><a href="#2）配置主从集群" class="headerlink" title="2）配置主从集群"></a>2）配置主从集群</h4><h6 id="在-mha-master-01-上以root用户登录，并分别创建复制用户"><a href="#在-mha-master-01-上以root用户登录，并分别创建复制用户" class="headerlink" title=" #在 mha_master_01 上以root用户登录，并分别创建复制用户"></a><font color="#dd0000"> #在 mha_master_01 上以root用户登录，并分别创建复制用户</font></h6><pre><code>grant replication slave on *.* to &apos;replication&apos;@&apos;192.172.0.%&apos; identified by &apos;replication&apos;;
+flush privileges;
+</code></pre><h6 id="在-mha-slave-01、mha-slave-02-上配置mha-master-01为主库"><a href="#在-mha-slave-01、mha-slave-02-上配置mha-master-01为主库" class="headerlink" title=" #在 mha_slave_01、mha_slave_02 上配置mha_master_01为主库"></a><font color="#dd0000"> #在 mha_slave_01、mha_slave_02 上配置mha_master_01为主库</font></h6><pre><code>CHANGE MASTER TO MASTER_HOST=&apos;192.172.0.11&apos;,  MASTER_USER=&apos;replication&apos;, MASTER_PASSWORD=&apos;replication&apos;, MASTER_AUTO_POSITION=1
+start slave;
+show slave status \G;  
+</code></pre><p><img src="/images/mha_cluster/2.png" alt="运行图"></p>
+<h4 id="3）主从测试"><a href="#3）主从测试" class="headerlink" title="3）主从测试"></a>3）主从测试</h4><h6 id="在-mha-master-01-上创建个数据库-test-，-看-mha-slave-01、mha-slave-02-是否同步创建了test库"><a href="#在-mha-master-01-上创建个数据库-test-，-看-mha-slave-01、mha-slave-02-是否同步创建了test库" class="headerlink" title=" #在 mha_master_01 上创建个数据库 test ， 看 mha_slave_01、mha_slave_02 是否同步创建了test库"></a><font color="#dd0000"> #在 mha_master_01 上创建个数据库 test ， 看 mha_slave_01、mha_slave_02 是否同步创建了test库</font></h6><pre><code>mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql&gt; create database test; 
+Query OK, 1 row affected (0.04 sec)
+
+mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
++--------------------+
+5 rows in set (0.00 sec)
+</code></pre><h6 id="在从节点-mha-slave-01、mha-slave-02-上查看数据库"><a href="#在从节点-mha-slave-01、mha-slave-02-上查看数据库" class="headerlink" title=" # 在从节点 mha_slave_01、mha_slave_02 上查看数据库"></a><font color="#dd0000"> # 在从节点 mha_slave_01、mha_slave_02 上查看数据库</font></h6><pre><code>mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| test               |
++--------------------+
+5 rows in set (0.00 sec)
+</code></pre><h3 id="配置所有主机中SSH免认证登录"><a href="#配置所有主机中SSH免认证登录" class="headerlink" title="配置所有主机中SSH免认证登录"></a>配置所有主机中SSH免认证登录</h3><h6 id="1、修改所有主机-sshd-config-配置文件-PermitRootLogin-yes，并启动sshd服务"><a href="#1、修改所有主机-sshd-config-配置文件-PermitRootLogin-yes，并启动sshd服务" class="headerlink" title="1、修改所有主机 sshd_config 配置文件 PermitRootLogin yes，并启动sshd服务"></a><font color="#dd0000">1、修改所有主机 sshd_config 配置文件 PermitRootLogin yes，并启动sshd服务</font></h6><pre><code>vim /etc/ssh/sshd_config 
+
+Port 22
+Protocol 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_dsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+UsePrivilegeSeparation yes
+
+KeyRegenerationInterval 3600
+ServerKeyBits 1024
+
+SyslogFacility AUTH
+LogLevel INFO
+
+LoginGraceTime 120
+PermitRootLogin yes
+StrictModes yes
+.
+.
+.
+</code></pre><h6 id="2、启动sshd"><a href="#2、启动sshd" class="headerlink" title="2、启动sshd"></a><font color="#dd0000">2、启动sshd</font></h6><pre><code>root@d3ca3e85de35:/# /etc/init.d/ssh start 
+ * Starting OpenBSD Secure Shell server sshd     
+</code></pre><h6 id="3、修改每台主机用户root的密码为111111"><a href="#3、修改每台主机用户root的密码为111111" class="headerlink" title="3、修改每台主机用户root的密码为111111"></a><font color="#dd0000">3、修改每台主机用户root的密码为111111</font></h6><pre><code>passwd root
+</code></pre><h6 id="4、在mha-master-01上生成ssh-key"><a href="#4、在mha-master-01上生成ssh-key" class="headerlink" title="4、在mha_master_01上生成ssh-key"></a><font color="#dd0000">4、在mha_master_01上生成ssh-key</font></h6><pre><code>root@d3ca3e85de35:/# ssh-keygen 
+Generating public/private rsa key pair.
+
+Enter file in which to save the key (/root/.ssh/id_rsa): Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:AIn1lcRzr6Xyd2bDtLBfNRPz11GHKZDFYx0E8QCB1GA root@d3ca3e85de35
+The key&apos;s randomart image is:
++---[RSA 2048]----+
+|   oo. +E=+B==o+o|
+|  . .o o= + =o+ o|
+|      o  o o o.+ |
+|       .    o   *|
+|        S  +   o=|
+|        . o . . =|
+|         o   = ..|
+|          . o B. |
+|           . =.. |
++----[SHA256]-----+
+</code></pre><h6 id="5、将mha-master-01的公钥同步到本机和其他主机"><a href="#5、将mha-master-01的公钥同步到本机和其他主机" class="headerlink" title="5、将mha_master_01的公钥同步到本机和其他主机"></a><font color="#dd0000">5、将mha_master_01的公钥同步到本机和其他主机</font></h6><pre><code>#1、同步本机
+root@d3ca3e85de35:/# ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.172.0.11
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: &quot;/root/.ssh/id_rsa.pub&quot;
+The authenticity of host &apos;192.172.0.11 (192.172.0.11)&apos; can&apos;t be established.
+ECDSA key fingerprint is SHA256:4cluU7bAFjMtxNiRQVJYh2CrMF6o0IgdmVksPjmCSeM.
+Are you sure you want to continue connecting (yes/no)? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+root@192.172.0.11&apos;s password: 
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   &quot;ssh &apos;root@192.172.0.11&apos;&quot;
+and check to make sure that only the key(s) you wanted were added.
+
+#2、验证本机ssh免认证登录
+root@d3ca3e85de35:/# ssh &apos;root@192.172.0.11&apos;
+Welcome to Ubuntu 16.04.3 LTS (GNU/Linux 3.10.0-693.17.1.el7.x86_64 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+ root@d3ca3e85de35:~# 
+
+#其他主机   重复上述步骤 1、2 ，将公钥同步到 mha_slave_01、mha_slave_02 、mha_manager 
+</code></pre><h6 id="6、在其他主机中重复4、5步骤，确保每台主机之间能相互的ssh免认证登录"><a href="#6、在其他主机中重复4、5步骤，确保每台主机之间能相互的ssh免认证登录" class="headerlink" title="6、在其他主机中重复4、5步骤，确保每台主机之间能相互的ssh免认证登录"></a><font color="#dd0000">6、在其他主机中重复4、5步骤，确保每台主机之间能相互的ssh免认证登录</font></h6><pre><code>略
+</code></pre><h3 id="所有主机中安装MHA-node软件包"><a href="#所有主机中安装MHA-node软件包" class="headerlink" title="所有主机中安装MHA-node软件包"></a>所有主机中安装MHA-node软件包</h3><pre><code>apt install libdbd-mysql-perl    //依赖包
+apt install make                   //工具包
+wget https://downloads.mariadb.com/MHA/mha4mysql-node-0.56.tar.gz
+tar -zxvf mha4mysql-node-0.56.tar.gz 
+cd mha4mysql-node-0.56
+perl Makefile.PL 
+make &amp;&amp; make install
+</code></pre><h3 id="监控主机中安装MHA-manger软件包"><a href="#监控主机中安装MHA-manger软件包" class="headerlink" title="监控主机中安装MHA-manger软件包"></a>监控主机中安装MHA-manger软件包</h3><pre><code>apt install libconfig-tiny-perl                //依赖包
+apt install liblog-dispatch-perl            //依赖包
+apt install libparallel-forkmanager-perl    //依赖包
+
+wget https://downloads.mariadb.com/MHA/mha4mysql-manager-0.56.tar.gz
+tar -zxvf mha4mysql-manager-0.56.tar.gz 
+cd mha4mysql-manager-0.56
+perl Makefile.PL 
+make &amp;&amp; make install
+</code></pre><h3 id="配置-MHA-Manager"><a href="#配置-MHA-Manager" class="headerlink" title="配置 MHA Manager"></a>配置 MHA Manager</h3><pre><code># 创建目录和文件
+mkdir /home/mha            
+touch /home/mha/manager.log
+mkdir /etc/mha
+touch /etc/mha/mysql_mha.conf
+
+#编辑
+vim /etc/mha/mysql_mha.conf
+
+[server default]
+manager_workdir=/home/mha/
+manager_log=/home/mha/manager.log
+master_binlog_dir=/var/lib/mysql
+user=root
+password=root
+remote_workdir=/home/mha    #每台数据库主机中要存在此目录
+repl_user=replication
+repl_password=replication
+ssh_user=root
+
+[server1]
+hostname=192.172.0.11
+port=3306
+
+[server2]
+hostname=192.172.0.13
+port=3306
+candidate_master=1
+check_repl_delay=0
+
+[server3]
+hostname=192.172.0.14
+port=3306
+</code></pre><h3 id="使用-masterha-check-ssh-检测每个主机节点中的ssh是否正常"><a href="#使用-masterha-check-ssh-检测每个主机节点中的ssh是否正常" class="headerlink" title="使用 masterha_check_ssh 检测每个主机节点中的ssh是否正常"></a>使用 masterha_check_ssh 检测每个主机节点中的ssh是否正常</h3><pre><code>root@f7e548d16865:/home/mha# masterha_check_ssh --conf=/etc/mha/mysql_mha.conf 
+Thu Aug 23 02:29:05 2018 - [warning] Global configuration file /etc/masterha_default.cnf not found. Skipping.
+Thu Aug 23 02:29:05 2018 - [info] Reading application default configurations from /etc/mha/mysql_mha.conf..
+Thu Aug 23 02:29:05 2018 - [info] Reading server configurations from /etc/mha/mysql_mha.conf..
+Thu Aug 23 02:29:05 2018 - [info] Starting SSH connection tests..
+Thu Aug 23 02:29:06 2018 - [debug] 
+Thu Aug 23 02:29:05 2018 - [debug]  Connecting via SSH from root@192.172.0.11(192.172.0.11:22) to root@192.172.0.13(192.172.0.13:22)..
+Thu Aug 23 02:29:05 2018 - [debug]   ok.
+Thu Aug 23 02:29:05 2018 - [debug]  Connecting via SSH from root@192.172.0.11(192.172.0.11:22) to root@192.172.0.14(192.172.0.14:22)..
+Thu Aug 23 02:29:06 2018 - [debug]   ok.
+Thu Aug 23 02:29:06 2018 - [debug] 
+Thu Aug 23 02:29:05 2018 - [debug]  Connecting via SSH from root@192.172.0.13(192.172.0.13:22) to root@192.172.0.11(192.172.0.11:22)..
+Thu Aug 23 02:29:06 2018 - [debug]   ok.
+Thu Aug 23 02:29:06 2018 - [debug]  Connecting via SSH from root@192.172.0.13(192.172.0.13:22) to root@192.172.0.14(192.172.0.14:22)..
+Thu Aug 23 02:29:06 2018 - [debug]   ok.
+Thu Aug 23 02:29:07 2018 - [debug] 
+Thu Aug 23 02:29:06 2018 - [debug]  Connecting via SSH from root@192.172.0.14(192.172.0.14:22) to root@192.172.0.11(192.172.0.11:22)..
+Thu Aug 23 02:29:06 2018 - [debug]   ok.
+Thu Aug 23 02:29:06 2018 - [debug]  Connecting via SSH from root@192.172.0.14(192.172.0.14:22) to root@192.172.0.13(192.172.0.13:22)..
+Thu Aug 23 02:29:06 2018 - [debug]   ok.
+Thu Aug 23 02:29:07 2018 - [info] All SSH connection tests passed successfully.
+</code></pre><h3 id="使用-masterha-check-repl-检测数据库主机中的主从复制是否正常"><a href="#使用-masterha-check-repl-检测数据库主机中的主从复制是否正常" class="headerlink" title="使用 masterha_check_repl 检测数据库主机中的主从复制是否正常"></a>使用 masterha_check_repl 检测数据库主机中的主从复制是否正常</h3><pre><code> root@f7e548d16865:/home/mha# masterha_check_repl --conf=/etc/mha/mysql_mha.conf   
+Thu Aug 23 02:30:53 2018 - [warning] Global configuration file /etc/masterha_default.cnf not found. Skipping.
+Thu Aug 23 02:30:53 2018 - [info] Reading application default configurations from /etc/mha/mysql_mha.conf..
+Thu Aug 23 02:30:53 2018 - [info] Reading server configurations from /etc/mha/mysql_mha.conf..
+Thu Aug 23 02:30:53 2018 - [info] MHA::MasterMonitor version 0.56.
+Thu Aug 23 02:30:53 2018 - [error][/usr/local/share/perl/5.22.1/MHA/ServerManager.pm, ln255] Got MySQL error when connecting 192.172.0.13(192.172.0.13:3306) :1045:Access denied for user &apos;root&apos;@&apos;mha_manager.mha_cluster&apos; (using password: YES), but this is not mysql crash. Check MySQL server settings.
+ at /usr/local/share/perl/5.22.1/MHA/ServerManager.pm line 251.
+Thu Aug 23 02:30:53 2018 - [error][/usr/local/share/perl/5.22.1/MHA/ServerManager.pm, ln255] Got MySQL error when connecting 192.172.0.11(192.172.0.11:3306) :1045:Access denied for user &apos;root&apos;@&apos;mha_manager.mha_cluster&apos; (using password: YES), but this is not mysql crash. Check MySQL server settings.
+ at /usr/local/share/perl/5.22.1/MHA/ServerManager.pm line 251.
+Thu Aug 23 02:30:53 2018 - [error][/usr/local/share/perl/5.22.1/MHA/ServerManager.pm, ln255] Got MySQL error when connecting 192.172.0.14(192.172.0.14:3306) :1045:Access denied for user &apos;root&apos;@&apos;mha_manager.mha_cluster&apos; (using password: YES), but this is not mysql crash. Check MySQL server settings.
+ at /usr/local/share/perl/5.22.1/MHA/ServerManager.pm line 251.
+Thu Aug 23 02:30:54 2018 - [error][/usr/local/share/perl/5.22.1/MHA/ServerManager.pm, ln263] Got fatal error, stopping operations
+Thu Aug 23 02:30:54 2018 - [error][/usr/local/share/perl/5.22.1/MHA/MasterMonitor.pm, ln401] Error happend on checking configurations.  at /usr/local/share/perl/5.22.1/MHA/MasterMonitor.pm line 306.
+Thu Aug 23 02:30:54 2018 - [error][/usr/local/share/perl/5.22.1/MHA/MasterMonitor.pm, ln500] Error happened on monitoring servers.
+Thu Aug 23 02:30:54 2018 - [info] Got exit code 1 (Not master dead).
+
+MySQL Replication Health is NOT OK!
+
+# 报错，解决方法在 主库中创建个用户 mha，赋相应权限(因为配置的主从，所有从库上也创建了相应的用户)，并修改配置文件
+# 1、创建用户并赋予权限
+mysql&gt; grant all privileges on *.* to mha@&apos;192.172.0.%&apos; identified by &apos;mah&apos;;  
+mysql&gt; flush privileges;
+
+# 2、修改MHA 配置文件 mysql_mha.conf
+
+vim /etc/mha/mysql_mha.conf
+
+[server default]
+manager_workdir=/home/mha/
+manager_log=/home/mha/manager.log
+master_binlog_dir=/var/lib/mysql
+user=mha                             #新创建的用户
+password=mha
+remote_workdir=/home/mha
+repl_user=replication
+repl_password=replication
+ssh_user=root
+
+[server1]
+hostname=192.172.0.11
+port=3306
+
+[server2]
+hostname=192.172.0.13
+port=3306
+candidate_master=1
+check_repl_delay=0
+
+[server3]
+hostname=192.172.0.14
+port=3306
+
+#重新执行  masterha_check_repl --conf=/etc/mha/mysql_mha.conf
+
+root@f7e548d16865:/home/mha# masterha_check_repl --conf=/etc/mha/mysql_mha.conf
+Thu Aug 23 03:03:58 2018 - [warning] Global configuration file /etc/masterha_default.cnf not found. Skipping.
+Thu Aug 23 03:03:58 2018 - [info] Reading application default configurations from /etc/mha/mysql_mha.conf..
+Thu Aug 23 03:03:58 2018 - [info] Reading server configurations from /etc/mha/mysql_mha.conf..
+Thu Aug 23 03:03:58 2018 - [info] MHA::MasterMonitor version 0.56.
+Thu Aug 23 03:03:59 2018 - [error][/usr/local/share/perl/5.22.1/MHA/MasterMonitor.pm, ln401] Error happend on checking configurations. Redundant argument in sprintf at /usr/local/share/perl/5.22.1/MHA/NodeUtil.pm line 184.
+Thu Aug 23 03:03:59 2018 - [error][/usr/local/share/perl/5.22.1/MHA/MasterMonitor.pm, ln500] Error happened on monitoring servers.
+Thu Aug 23 03:03:59 2018 - [info] Got exit code 1 (Not master dead).
+
+# 报错，解决方法: 修改 /usr/local/share/perl/5.22.1/MHA/NodeUtil.pm 文件,定位184行
+
+将以下内容
+sub parse_mysql_version($) {
+    my $str = shift;
+    my $result = sprintf( &apos;%03d%03d%03d&apos;, $str =~ m/(\d+)/g );
+    return $result;
+}
+sub parse_mysql_major_version($) {
+    my $str = shift;
+    my $result = sprintf( &apos;%03d%03d&apos;, $str =~ m/(\d+)/g );
+    return $result;
+}
+
+修改为下面内容
+
+sub parse_mysql_version($) {
+    my $str = shift;
+    $str =~ /(\d+)\.(\d+)/;
+    my $strmajor = &quot;$1.$2.$3&quot;;
+    my $result = sprintf( &apos;%03d%03d%03d&apos;, $strmajor =~ m/(\d+)/g );
+    return $result;
+}
+
+sub parse_mysql_major_version($) {
+    my $str = shift;
+    $str =~ /(\d+)\.(\d+)/;
+    my $strmajor = &quot;$1.$2&quot;;
+    my $result = sprintf( &apos;%03d%03d&apos;, $strmajor =~ m/(\d+)/g );
+    return $result;
+}
+
+#重新执行  masterha_check_repl --conf=/etc/mha/mysql_mha.conf
+
+root@f7e548d16865:/home/mha# masterha_check_repl --conf=/etc/mha/mysql_mha.conf
+Thu Aug 23 03:11:34 2018 - [warning] Global configuration file /etc/masterha_default.cnf not found. Skipping.
+Thu Aug 23 03:11:34 2018 - [info] Reading application default configurations from /etc/mha/mysql_mha.conf..
+Thu Aug 23 03:11:34 2018 - [info] Reading server configurations from /etc/mha/mysql_mha.conf..
+Thu Aug 23 03:11:34 2018 - [info] MHA::MasterMonitor version 0.56.
+Thu Aug 23 03:11:35 2018 - [info] Dead Servers:
+Thu Aug 23 03:11:35 2018 - [info] Alive Servers:
+Thu Aug 23 03:11:35 2018 - [info]   192.172.0.11(192.172.0.11:3306)
+Thu Aug 23 03:11:35 2018 - [info]   192.172.0.13(192.172.0.13:3306)
+Thu Aug 23 03:11:35 2018 - [info]   192.172.0.14(192.172.0.14:3306)
+Thu Aug 23 03:11:35 2018 - [info] Alive Slaves:
+Thu Aug 23 03:11:35 2018 - [info]   192.172.0.13(192.172.0.13:3306)  Version=5.7.23-0ubuntu0.16.04.1-log (oldest major version between slaves) log-bin:enabled
+Thu Aug 23 03:11:35 2018 - [info]     GTID ON
+Thu Aug 23 03:11:35 2018 - [info]     Replicating from 192.172.0.11(192.172.0.11:3306)
+Thu Aug 23 03:11:35 2018 - [info]     Primary candidate for the new Master (candidate_master is set)
+Thu Aug 23 03:11:35 2018 - [info]   192.172.0.14(192.172.0.14:3306)  Version=5.7.23-0ubuntu0.16.04.1-log (oldest major version between slaves) log-bin:enabled
+Thu Aug 23 03:11:35 2018 - [info]     GTID ON
+Thu Aug 23 03:11:35 2018 - [info]     Replicating from 192.172.0.11(192.172.0.11:3306)
+Thu Aug 23 03:11:35 2018 - [info] Current Alive Master: 192.172.0.11(192.172.0.11:3306)
+Thu Aug 23 03:11:35 2018 - [info] Checking slave configurations..
+Thu Aug 23 03:11:35 2018 - [info]  read_only=1 is not set on slave 192.172.0.13(192.172.0.13:3306).
+Thu Aug 23 03:11:35 2018 - [warning]  relay_log_purge=0 is not set on slave 192.172.0.13(192.172.0.13:3306).
+Thu Aug 23 03:11:35 2018 - [info]  read_only=1 is not set on slave 192.172.0.14(192.172.0.14:3306).
+Thu Aug 23 03:11:35 2018 - [warning]  relay_log_purge=0 is not set on slave 192.172.0.14(192.172.0.14:3306).
+Thu Aug 23 03:11:35 2018 - [info] Checking replication filtering settings..
+Thu Aug 23 03:11:35 2018 - [info]  binlog_do_db= , binlog_ignore_db= 
+Thu Aug 23 03:11:35 2018 - [info]  Replication filtering check ok.
+Thu Aug 23 03:11:35 2018 - [info] GTID is supported. Skipping all SSH and Node package checking.
+Thu Aug 23 03:11:35 2018 - [info] Checking SSH publickey authentication settings on the current master..
+Thu Aug 23 03:11:35 2018 - [info] HealthCheck: SSH to 192.172.0.11 is reachable.
+Thu Aug 23 03:11:35 2018 - [info] 
+192.172.0.11 (current master)
+ +--192.172.0.13
+ +--192.172.0.14
+
+Thu Aug 23 03:11:35 2018 - [info] Checking replication health on 192.172.0.13..
+Thu Aug 23 03:11:35 2018 - [info]  ok.
+Thu Aug 23 03:11:35 2018 - [info] Checking replication health on 192.172.0.14..
+Thu Aug 23 03:11:35 2018 - [info]  ok.
+Thu Aug 23 03:11:35 2018 - [warning] master_ip_failover_script is not defined.
+Thu Aug 23 03:11:35 2018 - [warning] shutdown_script is not defined.
+Thu Aug 23 03:11:35 2018 - [info] Got exit code 0 (Not master dead).
+
+MySQL Replication Health is OK.
+</code></pre><h3 id="启动MHA-manager"><a href="#启动MHA-manager" class="headerlink" title="启动MHA-manager"></a>启动MHA-manager</h3><pre><code>root@f7e548d16865:/home/mha# nohup masterha_manager --conf=/etc/mha/mysql_mha.conf &amp;
+root@f7e548d16865:/home/mha# ps -ef | grep master
+root      1231     1  0 03:15 ?        00:00:00 perl /usr/local/bin/masterha_manager --conf=/etc/mha/mysql_mha.conf
+root      1268     1  0 03:15 ?        00:00:00 grep --color=auto master
+</code></pre><h3 id="查看manager日志"><a href="#查看manager日志" class="headerlink" title="查看manager日志"></a>查看manager日志</h3><pre><code>root@f7e548d16865:/home/mha# cat manager.log 
+Thu Aug 23 03:15:08 2018 - [info] MHA::MasterMonitor version 0.56.
+Thu Aug 23 03:15:09 2018 - [info] Dead Servers:
+Thu Aug 23 03:15:09 2018 - [info] Alive Servers:
+Thu Aug 23 03:15:09 2018 - [info]   192.172.0.11(192.172.0.11:3306)
+Thu Aug 23 03:15:09 2018 - [info]   192.172.0.13(192.172.0.13:3306)
+Thu Aug 23 03:15:09 2018 - [info]   192.172.0.14(192.172.0.14:3306)
+Thu Aug 23 03:15:09 2018 - [info] Alive Slaves:
+Thu Aug 23 03:15:09 2018 - [info]   192.172.0.13(192.172.0.13:3306)  Version=5.7.23-0ubuntu0.16.04.1-log (oldest major version between slaves) log-bin:enabled
+Thu Aug 23 03:15:09 2018 - [info]     GTID ON
+Thu Aug 23 03:15:09 2018 - [info]     Replicating from 192.172.0.11(192.172.0.11:3306)
+Thu Aug 23 03:15:09 2018 - [info]     Primary candidate for the new Master (candidate_master is set)
+Thu Aug 23 03:15:09 2018 - [info]   192.172.0.14(192.172.0.14:3306)  Version=5.7.23-0ubuntu0.16.04.1-log (oldest major version between slaves) log-bin:enabled
+Thu Aug 23 03:15:09 2018 - [info]     GTID ON
+Thu Aug 23 03:15:09 2018 - [info]     Replicating from 192.172.0.11(192.172.0.11:3306)
+Thu Aug 23 03:15:09 2018 - [info] Current Alive Master: 192.172.0.11(192.172.0.11:3306)
+Thu Aug 23 03:15:09 2018 - [info] Checking slave configurations..
+Thu Aug 23 03:15:09 2018 - [info]  read_only=1 is not set on slave 192.172.0.13(192.172.0.13:3306).
+Thu Aug 23 03:15:09 2018 - [warning]  relay_log_purge=0 is not set on slave 192.172.0.13(192.172.0.13:3306).
+Thu Aug 23 03:15:09 2018 - [info]  read_only=1 is not set on slave 192.172.0.14(192.172.0.14:3306).
+Thu Aug 23 03:15:09 2018 - [warning]  relay_log_purge=0 is not set on slave 192.172.0.14(192.172.0.14:3306).
+Thu Aug 23 03:15:09 2018 - [info] Checking replication filtering settings..
+Thu Aug 23 03:15:09 2018 - [info]  binlog_do_db= , binlog_ignore_db= 
+Thu Aug 23 03:15:09 2018 - [info]  Replication filtering check ok.
+Thu Aug 23 03:15:09 2018 - [info] GTID is supported. Skipping all SSH and Node package checking.
+Thu Aug 23 03:15:09 2018 - [info] Checking SSH publickey authentication settings on the current master..
+Thu Aug 23 03:15:09 2018 - [info] HealthCheck: SSH to 192.172.0.11 is reachable.
+Thu Aug 23 03:15:09 2018 - [info] 
+192.172.0.11 (current master)
+ +--192.172.0.13
+ +--192.172.0.14
+
+Thu Aug 23 03:15:09 2018 - [warning] master_ip_failover_script is not defined.
+Thu Aug 23 03:15:09 2018 - [warning] shutdown_script is not defined.
+Thu Aug 23 03:15:09 2018 - [info] Set master ping interval 1 seconds.
+Thu Aug 23 03:15:09 2018 - [warning] secondary_check_script is not defined. It is highly recommended setting it to check master reachability from two or more routes.
+Thu Aug 23 03:15:09 2018 - [info] Starting ping health check on 192.172.0.11(192.172.0.11:3306)..
+Thu Aug 23 03:15:09 2018 - [info] Ping(SELECT) succeeded, waiting until MySQL doesn&apos;t respond..
+</code></pre><h3 id="测试——将mha-master-01的mysql停止，看主库是否切换"><a href="#测试——将mha-master-01的mysql停止，看主库是否切换" class="headerlink" title="测试——将mha_master_01的mysql停止，看主库是否切换"></a>测试——将mha_master_01的mysql停止，看主库是否切换</h3><pre><code>root@d3ca3e85de35:/home/mha# service mysql stop     #主库上执行 
+
+#查看mha-manager监控日志
+略
+
+#在 mha_slave_02 看查看备份信息
+mysql&gt; show slave status \G;
+*************************** 1. row ***************************
+               Slave_IO_State: Waiting for master to send event
+                  Master_Host: 192.172.0.13
+                  Master_User: replication
+                  Master_Port: 3306
+                Connect_Retry: 60
+              Master_Log_File: slave-binlog.000001
+          Read_Master_Log_Pos: 2216
+               Relay_Log_File: 4aa81d364f7d-relay-bin.000002
+                Relay_Log_Pos: 423
+        Relay_Master_Log_File: slave-binlog.000001
+             Slave_IO_Running: Yes
+            Slave_SQL_Running: Yes
+.
+.
+.
+
+#可以看出 Master_Host 从之前主库地址 192.172.0.11 切换到 mha_slave_01 192.172.0.13
+
+
+#重启 mha_master_01（192.172.0.11） 上的msyql，并配置为 mha_slave_01（192.172.0.13 目前是主库） 的从库
+#重新构建 主-从-从 集群
+root@d3ca3e85de35:/home/mha# service mysql start
+root@d3ca3e85de35:/home/mha# mysql -p
+mysql&gt; CHANGE MASTER TO MASTER_HOST=&apos;192.172.0.11&apos;,  MASTER_USER=&apos;replication&apos;, MASTER_PASSWORD=&apos;replication&apos;, MASTER_AUTO_POSITION=1;
+mysql&gt; start slave;
+
+#启动 mha_manager 继续监控，（刚才切换主从之后，mha_manager就退出了，不知道原因，所有每次主从切换之后要重新构建”主-从-从“集群之后再次启动mha_manager）
+#可以继续模拟 mha_slave_01 主库宕机，使主库回到 mha_master_01 上
+
+略
+</code></pre>
+  </section>
+
+</article>
+
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2018/08/27/mysql-mgr/" title="Mysql Group Replication 高可用组复制集群环境搭建">Mysql Group Replication 高可用组复制集群环境搭建</a></h2>
+                <p class="excerpt">
+                
+                一、MySQL的高可用集群可分为“主从复制”和“组复制”传统主从复制参照Mysql手册
+ 1、异步复制
+
+
+ 2、半同步复制
+
+
+组复制（5.7.17新增功能）参照Mysql手册
+
+二、Mysql Server服务节点环境说明mgr_n1        192.172.0.11
+mgr_n2    
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2018-08-27T06:20:00.000Z" class="post-list__meta--date date">2018-08-27</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/08/27/mysql-mgr/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2018/07/10/mysql_cluster_inDocker/" title="Docker模拟搭建MySql Cluster集群">Docker模拟搭建MySql Cluster集群</a></h2>
+                <p class="excerpt">
+                
+                一、介绍Mysql Cluster 是一种技术，其主要功能是在无共享的相关系统中部署内存中数据库的Cluster，其主要是通过NDB Cluster（简称NDB）存储引擎来实现的。
+NDB 存储引擎也叫NDB Cluster 存储引擎，主要用于MySQL Cluster 分布式集群环境，Cluste
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2018-07-10T02:01:25.000Z" class="post-list__meta--date date">2018-07-10</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/07/10/mysql_cluster_inDocker/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+  <!--  -->
+
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNTExNi8xMTY1MQ==">
+    <script type="text/javascript">
+        (function(d, s) {
+            var j, e = d.getElementsByTagName(s)[0];
+
+            if (typeof LivereTower === 'function') {
+                return;
+            }
+
+            j = d.createElement(s);
+            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+            j.async = true;
+
+            e.parentNode.insertBefore(j, e);
+        })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    
+    
+</footer>
+
+
+        </div>
+    </div>
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    
+</body>
+</html>

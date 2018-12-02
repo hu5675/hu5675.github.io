@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2018/11/19/elk/</loc>
+    <lastmod>2018-12-02T02:50:18.982Z</lastmod>
+    <data>
+        <display>
+        <title>ELK日志收集框架部署步骤</title>
+        <pubTime>2018-11-19T08:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2018/07/10/mysql_cluster_inDocker/</loc>
+    <lastmod>2018-10-10T15:24:43.934Z</lastmod>
+    <data>
+        <display>
+        <title>Docker模拟搭建MySql Cluster集群</title>
+        <pubTime>2018-07-10T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2018/08/27/mysql-mgr/</loc>
+    <lastmod>2018-10-10T15:24:43.933Z</lastmod>
+    <data>
+        <display>
+        <title>Mysql Group Replication 高可用组复制集群环境搭建</title>
+        <pubTime>2018-08-27T06:20:00.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2018/08/22/mha_cluster/</loc>
+    <lastmod>2018-10-10T15:24:43.932Z</lastmod>
+    <data>
+        <display>
+        <title>MHA架构模拟搭建</title>
+        <pubTime>2018-08-22T09:07:00.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2018/03/16/mongodb_install_inDocker/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>Docker中手动安装Mongodb，不使用Docker的MongoDB镜像。</title>
+        <pubTime>2018-03-16T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2017/05/15/ios_static_library/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>iOS在Cocoa Touch Static Library使用CocoaPods</title>
+        <pubTime>2017-05-15T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2017/06/15/ios_submit_library_to_pods/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>IOS创建开源库步骤,提交cocoa pods官网，别人可以使用</title>
+        <pubTime>2017-06-15T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2017/12/15/jenkins-ci/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>Jenkins 持续集成工具使用介绍</title>
+        <pubTime>2017-12-15T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2018/02/15/maven-docker/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>Maven + Docker + GitLab + Jenkins 构建镜像并提交Docker私有镜像库， 搭建持续集成环境</title>
+        <pubTime>2018-02-15T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2017/07/15/cdd-template/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>MrPeak CDD之模板脚本执行报错解决方法记录一下</title>
+        <pubTime>2017-07-15T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2017/02/15/hello-world/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>提升沟通能力启程之旅</title>
+        <pubTime>2017-02-15T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2018/04/01/mongodb_sharding_inDocker/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>Docker中搭建mongodb分片副本集集群 (mongodb sharding repliset cluster)。</title>
+        <pubTime>2018-04-01T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2017/07/15/clean_code/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>代码整洁之道——变量定义</title>
+        <pubTime>2017-07-15T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2017/04/15/ios_static_framework_distinction/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>IOS静态库和Framework区别</title>
+        <pubTime>2017-04-15T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2018/05/27/mysql_replication_docker/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>MySQL Replication 集群</title>
+        <pubTime>2018-05-27T03:00:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2018/05/01/redis_cluster_inDocker/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>利用docker搭建redis cluster(集群) ——3主3从</title>
+        <pubTime>2018-05-01T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2017/08/15/swfit-objc-type/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>为什么说 Swift 比 Object-C 类型更安全？</title>
+        <pubTime>2017-08-15T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2017/11/15/tcp-ip/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>浅析TCP/IP网络基础——引用同事分享</title>
+        <pubTime>2017-11-15T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+</urlset>
