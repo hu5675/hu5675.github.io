@@ -77,23 +77,23 @@ date: 2018-11-19 16:01:25
 
 #### 1、利用es-head验证es集群是否正常：
 	# 浏览器打开
-	http://118.190.165.171:9100/?auth_user=elastic&auth_password=elastic
+	http://***.***.***.***:9100/?auth_user=elastic&auth_password=elastic
 ![](/images/elk/es-head.png) 
 <font color="#dd0000">可见es集群正常，注意箭头所指的地址记得修改</font>
 
 #### 2、利用es api接口验证：
 	# 浏览器打开
-	http://118.190.165.171:9200/_cat/nodes  会要求输入用户名和密码  用户名：elastic  密码：elastic
+	http://***.***.***.***:9200/_cat/nodes  会要求输入用户名和密码  用户名：elastic  密码：elastic
 ![](/images/elk/es-api.png) 
 
 #### 3、验证logstash 是否正常：
 	# 浏览器输入： 
-	http://118.190.165.171:9600/ 
+	http://***.***.***.***:9600/ 
 ![](/images/elk/logstash.png) 
 
 #### 4、验证kibana是否正常：
 	# 浏览器输入：
-	http://118.190.165.171:5601  会要求输入用户名和密码 用户名：elastic  密码：elastic
+	http://***.***.***.***:5601  会要求输入用户名和密码 用户名：elastic  密码：elastic
 ![](/images/elk/kibana.png) 
 
 <font color="#dd0000">到此 es集群、Logstash、es-head以及kibana 搭建完成</font>
