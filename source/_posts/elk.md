@@ -29,6 +29,11 @@ date: 2018-11-19 16:01:25
 	# 启动docker
 	systemctl start docker
 
+	#安装docker-compose
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+	sudo chmod +x /usr/local/bin/docker-compose
+	docker-compose --version
+
 ### 三、镜像与ELK配置文件相关准备
 
 #### 1、镜像准备，执行命令：
