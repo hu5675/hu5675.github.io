@@ -151,6 +151,11 @@ docker --version
 
 # 启动docker
 systemctl start docker
+
+#安装docker-compose
+sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
 </code></pre><h3 id="三、镜像与ELK配置文件相关准备"><a href="#三、镜像与ELK配置文件相关准备" class="headerlink" title="三、镜像与ELK配置文件相关准备"></a>三、镜像与ELK配置文件相关准备</h3><h4 id="1、镜像准备，执行命令："><a href="#1、镜像准备，执行命令：" class="headerlink" title="1、镜像准备，执行命令："></a>1、镜像准备，执行命令：</h4><pre><code>docker pull elasticsearch:6.4.2
 docker pull logstash:6.4.2
 docker pull kibana:6.4.2
@@ -211,6 +216,24 @@ http://***.***.***.***:5601  会要求输入用户名和密码 用户名：elast
 <section class="read-more">
            
     
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2019/02/19/jmeter/" title="Jmeter 对api接口进行分布式压测">Jmeter 对api接口进行分布式压测</a></h2>
+                <p class="excerpt">
+                
+                一、需求缘起公司要求对一级api接口进行压测，目标：1万qps
+二、压测部署图 
+二、硬件准备(Linux 4核8g)Jmeter Master : jmeter_master_ip
+
+Jmeter Slave 01: jmeter_slave_ip_01
+
+Jmeter Slave 02: jme
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2019-02-19T02:01:25.000Z" class="post-list__meta--date date">2019-02-19</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2019/02/19/jmeter/">继续阅读</a></div>
+                           
+            </div>
         
         
                

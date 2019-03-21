@@ -4,8 +4,53 @@
 
     
   <url>
+    <loc>http://bboymars.coding.me/2019/02/19/jmeter/</loc>
+    <lastmod>2019-03-21T14:05:49.636Z</lastmod>
+    <data>
+        <display>
+        <title>Jmeter 对api接口进行分布式压测</title>
+        <pubTime>2019-02-19T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2019/03/19/es_access/</loc>
+    <lastmod>2019-03-21T14:05:49.636Z</lastmod>
+    <data>
+        <display>
+        <title>利用Nginx作为ES安全访问控制</title>
+        <pubTime>2019-03-19T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2019/03/19/es_load/</loc>
+    <lastmod>2019-03-21T14:05:49.636Z</lastmod>
+    <data>
+        <display>
+        <title>利用Nginx作为ES负载均衡</title>
+        <pubTime>2019-03-19T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://bboymars.coding.me/2018/11/19/elk/</loc>
-    <lastmod>2018-12-02T02:50:18.982Z</lastmod>
+    <lastmod>2019-03-21T14:05:49.635Z</lastmod>
     <data>
         <display>
         <title>ELK日志收集框架部署步骤</title>
@@ -64,12 +109,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2018/03/16/mongodb_install_inDocker/</loc>
+    <loc>http://bboymars.coding.me/2017/06/15/ios_submit_library_to_pods/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>Docker中手动安装Mongodb，不使用Docker的MongoDB镜像。</title>
-        <pubTime>2018-03-16T02:01:25.000Z</pubTime>
+        <title>IOS创建开源库步骤,提交cocoa pods官网，别人可以使用</title>
+        <pubTime>2017-06-15T02:01:25.000Z</pubTime>
         
          
            
@@ -94,12 +139,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2017/06/15/ios_submit_library_to_pods/</loc>
+    <loc>http://bboymars.coding.me/2017/12/15/jenkins-ci/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>IOS创建开源库步骤,提交cocoa pods官网，别人可以使用</title>
-        <pubTime>2017-06-15T02:01:25.000Z</pubTime>
+        <title>Jenkins 持续集成工具使用介绍</title>
+        <pubTime>2017-12-15T02:01:25.000Z</pubTime>
         
          
            
@@ -109,12 +154,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2017/12/15/jenkins-ci/</loc>
+    <loc>http://bboymars.coding.me/2017/07/15/clean_code/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>Jenkins 持续集成工具使用介绍</title>
-        <pubTime>2017-12-15T02:01:25.000Z</pubTime>
+        <title>代码整洁之道——变量定义</title>
+        <pubTime>2017-07-15T02:01:25.000Z</pubTime>
         
          
            
@@ -139,12 +184,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2017/07/15/clean_code/</loc>
+    <loc>http://bboymars.coding.me/2018/03/16/mongodb_install_inDocker/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>代码整洁之道——变量定义</title>
-        <pubTime>2017-07-15T02:01:25.000Z</pubTime>
+        <title>Docker中手动安装Mongodb，不使用Docker的MongoDB镜像。</title>
+        <pubTime>2018-03-16T02:01:25.000Z</pubTime>
         
          
            
@@ -199,21 +244,6 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2018/05/27/mysql_replication_docker/</loc>
-    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
-    <data>
-        <display>
-        <title>MySQL Replication 集群</title>
-        <pubTime>2018-05-27T03:00:25.000Z</pubTime>
-        
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>http://bboymars.coding.me/2017/04/15/ios_static_framework_distinction/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
@@ -229,12 +259,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2017/08/15/swfit-objc-type/</loc>
+    <loc>http://bboymars.coding.me/2018/05/27/mysql_replication_docker/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>为什么说 Swift 比 Object-C 类型更安全？</title>
-        <pubTime>2017-08-15T02:01:25.000Z</pubTime>
+        <title>MySQL Replication 集群</title>
+        <pubTime>2018-05-27T03:00:25.000Z</pubTime>
         
          
            
@@ -250,6 +280,21 @@
         <display>
         <title>利用docker搭建redis cluster(集群) ——3主3从</title>
         <pubTime>2018-05-01T02:01:25.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://bboymars.coding.me/2017/08/15/swfit-objc-type/</loc>
+    <lastmod>2018-06-13T15:02:41.000Z</lastmod>
+    <data>
+        <display>
+        <title>为什么说 Swift 比 Object-C 类型更安全？</title>
+        <pubTime>2017-08-15T02:01:25.000Z</pubTime>
         
          
            

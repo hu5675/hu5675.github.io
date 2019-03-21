@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>利用Nginx作为ES安全访问控制 | Bboymars</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="喜欢运动类型的活动">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="利用Nginx作为ES安全访问控制 | Bboymars">
+    <meta name="twitter:description" content="喜欢运动类型的活动">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="利用Nginx作为ES安全访问控制 | Bboymars">
+    <meta property="og:description" content="喜欢运动类型的活动">
+
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+
+    <link rel="canonical" href="http://bboymars.coding.me/2019/03/19/es_access/"/>
+
+                 
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Bboymars 的主页"><img src="/images/avatar.jpg" width="80" alt="Bboymars logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Bboymars">Bboymars</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">从事Java、IOS开发</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">喜欢运动类型的活动</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/hu5675" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div> 
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2019-03-19T02:01:25.000Z" class="post-list__meta--date date">2019-03-19</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title">利用Nginx作为ES安全访问控制</h1>
+  </header>
+
+  <section class="post">
+    <h3 id="一、需求缘起"><a href="#一、需求缘起" class="headerlink" title="一、需求缘起"></a>一、需求缘起</h3><pre><code>学习慕课网《基于ElasticSearch搜房网实战》做笔记
+
+描述：es-head/es http请求可不经过任何安全验证在浏览器访问，具有巨大的潜在威胁。
+
+方案：利用Nginx进行访问控制。
+</code></pre><h3 id="二、环境准备"><a href="#二、环境准备" class="headerlink" title="二、环境准备"></a>二、环境准备</h3><pre><code>参考《利用Nginx作为ES负载均衡》 一到六。
+</code></pre><h3 id="修改-ES-各个节点配置，不允许外网访问，并重启，-本练习中使用docker构建环境，所以配置有点区别。"><a href="#修改-ES-各个节点配置，不允许外网访问，并重启，-本练习中使用docker构建环境，所以配置有点区别。" class="headerlink" title="修改 ES 各个节点配置，不允许外网访问，并重启， 本练习中使用docker构建环境，所以配置有点区别。"></a>修改 ES 各个节点配置，不允许外网访问，并重启， 本练习中使用docker构建环境，所以配置有点区别。</h3><pre><code>es 节点
+
+cluster.name: es-cluster
+node.name: es
+node.master: true
+node.data: true
+
+network.host: es
+
+http.port: 9200
+transport.tcp.port: 9300
+http.cors.enabled: true
+http.cors.allow-origin: &quot;*&quot;
+http.cors.allow-headers: Authorization,X-Requested-With,Content-Length,Content-Type
+
+discovery.zen.ping.unicast.hosts: [&quot;es:9300&quot;, &quot;es1:9300&quot;, &quot;es2:9300&quot;]
+discovery.zen.minimum_master_nodes: 2
+discovery.zen.ping_timeout: 5s
+
+bootstrap.memory_lock: true
+action.destructive_requires_name: true
+
+es1 节点
+
+cluster.name: es-cluster
+node.name: es1
+node.master: true
+node.data: true
+
+network.host: es1
+
+http.port: 9200
+transport.tcp.port: 9300
+http.cors.enabled: true
+http.cors.allow-origin: &quot;*&quot;
+http.cors.allow-headers: Authorization,X-Requested-With,Content-Length,Content-Type
+
+discovery.zen.ping.unicast.hosts: [&quot;es:9300&quot;, &quot;es1:9300&quot;, &quot;es2:9300&quot;]
+discovery.zen.minimum_master_nodes: 2
+discovery.zen.ping_timeout: 5s
+
+bootstrap.memory_lock: true
+action.destructive_requires_name: true
+
+es2 节点
+
+cluster.name: es-cluster
+node.name: es2
+node.master: true
+node.data: true
+
+network.host: es2
+
+http.port: 9200
+transport.tcp.port: 9300
+http.cors.enabled: true
+http.cors.allow-origin: &quot;*&quot;
+http.cors.allow-headers: Authorization,X-Requested-With,Content-Length,Content-Type
+
+discovery.zen.ping.unicast.hosts: [&quot;es:9300&quot;, &quot;es1:9300&quot;, &quot;es2:9300&quot;]
+discovery.zen.minimum_master_nodes: 2
+discovery.zen.ping_timeout: 5s
+
+bootstrap.memory_lock: true
+action.destructive_requires_name: true
+
+使用curl访问docker容器中的es节点：
+</code></pre><p><img src="/images/es_access/2.png" alt=""> </p>
+<pre><code>在浏览器上不能访问
+</code></pre><p><img src="/images/es_access/1.png" alt=""> </p>
+<h3 id="配置Nginx-http负载"><a href="#配置Nginx-http负载" class="headerlink" title="配置Nginx http负载"></a>配置Nginx http负载</h3><pre><code>upstream elasticsearch {
+    server 192.168.80.2:9200;
+    server 192.168.80.3:9200;
+    server 192.168.80.4:9200;
+}
+
+server {
+    listen       8888;
+    server_name  localhost;
+
+    location / {
+            proxy_pass    http://elasticsearch;
+            proxy_redirect off;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}
+
+重启并外网验证
+</code></pre><p><img src="/images/es_access/3.png" alt=""> </p>
+<h3 id="配置Nginx-安全访问"><a href="#配置Nginx-安全访问" class="headerlink" title="配置Nginx 安全访问"></a>配置Nginx 安全访问</h3><pre><code>1） 在主机上新建目录password，执行密码生成命令。
+
+[root@iZm5ehu0llwzjkgb44sii3Z es-cluster]# mkdir password
+[root@iZm5ehu0llwzjkgb44sii3Z es-cluster]# 
+[root@iZm5ehu0llwzjkgb44sii3Z es-cluster]# cd password/
+[root@iZm5ehu0llwzjkgb44sii3Z password]# 
+[root@iZm5ehu0llwzjkgb44sii3Z password]# printf &quot;mars:$(openssl passwd -crypt elasticsearch)\n&quot; &gt; passwords
+Warning: truncating password to 8 characters
+[root@iZm5ehu0llwzjkgb44sii3Z password]# 
+[root@iZm5ehu0llwzjkgb44sii3Z password]# ll
+total 4
+-rw-r--r-- 1 root root 19 Mar 19 17:28 passwords
+[root@iZm5ehu0llwzjkgb44sii3Z password]# 
+[root@iZm5ehu0llwzjkgb44sii3Z password]# 
+
+2）配置Nginx 密码访问
+
+upstream elasticsearch {
+    server 192.168.80.2:9200;
+    server 192.168.80.3:9200;
+    server 192.168.80.4:9200;
+}
+
+server {
+    listen       8888;
+    server_name  localhost;
+
+    auth_basic &quot;Protection&quot;;
+    auth_basic_user_file /mnt/docker-elk/es-cluster/password/passwords;
+
+    location / {
+            proxy_pass    http://elasticsearch;
+            proxy_redirect off;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}
+
+重启并在浏览器验证密码是否生效
+</code></pre><p><img src="/images/es_access/4.png" alt=""> </p>
+<p><br></p>
+<p><img src="/images/es_access/5.png" alt=""> </p>
+<h3 id="es-head-验证"><a href="#es-head-验证" class="headerlink" title="es-head 验证"></a>es-head 验证</h3><p><img src="/images/es_access/6.png" alt=""> </p>
+<pre><code>可以看到es-head还是不能访问，nginx需要配置跨域。
+
+ upstream elasticsearch {
+    server 192.168.80.2:9200;
+    server 192.168.80.3:9200;
+    server 192.168.80.4:9200;
+}
+
+server {
+    listen       8888;
+    server_name  localhost;
+
+    auth_basic &quot;Protection&quot;;
+    auth_basic_user_file /mnt/docker-elk/es-cluster/password/passwords;
+
+    location / {
+            proxy_pass    http://elasticsearch;
+            proxy_redirect off;
+
+            if ($request_method = &apos;OPTIONS&apos;) {
+                    add_header &apos;Access-Control-Allow-Origin&apos; &apos;*&apos;;
+                    add_header &apos;Access-Control-Allow-Methods&apos; &apos;GET, POST, OPTIONS, POST, PUT&apos;;
+                    add_header &apos;Access-Control-Allow-Headers&apos; &apos;DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,X-CustomHeader,Content-Range,Range&apos;;
+                    add_header &apos;Acessss-Control-Max-Age&apos; 172800;
+                    add_header &apos;Content-Type&apos; &apos;text-plain;charset=utf-8&apos;;
+                    add_header &apos;Content-Length&apos; 0;
+                    return 204;
+            }
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}
+
+重启 es-head再次验证
+</code></pre><p><img src="/images/es_access/7.png" alt=""> </p>
+<h3 id="选择性认证，如：-cat-xxx-让-cat-相关的健康检查接口不需要验证。"><a href="#选择性认证，如：-cat-xxx-让-cat-相关的健康检查接口不需要验证。" class="headerlink" title="选择性认证，如： _cat/xxx , 让 _cat 相关的健康检查接口不需要验证。"></a>选择性认证，如： _cat/xxx , 让 _cat 相关的健康检查接口不需要验证。</h3><pre><code>upstream elasticsearch {
+    server 192.168.80.2:9200;
+    server 192.168.80.3:9200;
+    server 192.168.80.4:9200;
+}
+
+
+server {
+    listen       8888;
+    server_name  localhost;
+
+    location @general {
+            proxy_pass    http://elasticsearch;
+            proxy_redirect off;
+
+    }
+
+    location @need_protection {
+            auth_basic &quot;Protection&quot;;
+            auth_basic_user_file /mnt/docker-elk/es-cluster/password/passwords;
+
+            proxy_pass    http://elasticsearch;
+            proxy_redirect off;
+    }
+
+    location / {
+
+            if ($request_method = &apos;OPTIONS&apos;) {
+                    add_header &apos;Access-Control-Allow-Origin&apos; &apos;*&apos;;
+                    add_header &apos;Access-Control-Allow-Methods&apos; &apos;GET, POST, OPTIONS, POST, PUT&apos;;
+                    add_header &apos;Access-Control-Allow-Headers&apos; &apos;DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,X-CustomHeader,Content-Range,Range&apos;;
+                    add_header &apos;Acessss-Control-Max-Age&apos; 172800;
+                    add_header &apos;Content-Type&apos; &apos;text-plain;charset=utf-8&apos;;
+                    add_header &apos;Content-Length&apos; 0;
+                    return 204;
+            }
+
+            error_page 598 = @general;
+            error_page 599 = @need_protection;
+
+            if ($request_uri ~ ^/_cat.*$) {
+                    return 598;
+            }
+            return 599;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   html;
+    }
+}
+</code></pre><h3 id="重启再次验证"><a href="#重启再次验证" class="headerlink" title="重启再次验证,"></a>重启再次验证,</h3><p><img src="/images/es_access/8.png" alt=""> </p>
+<p><br></p>
+<p><img src="/images/es_access/9.png" alt="">     </p>
+<pre><code>可见，_cat/***  不需要验证  非 _cat/*** 则需要验证。
+</code></pre>
+  </section>
+
+</article>
+
+<section class="read-more">
+           
+    
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2019/03/19/es_load/" title="利用Nginx作为ES负载均衡">利用Nginx作为ES负载均衡</a></h2>
+                <p class="excerpt">
+                
+                一、需求缘起学习慕课网《基于ElasticSearch搜房网实战》做笔记
+
+es节点可分为：
+
+《主节点》 
+
+配置 node.master=true,node.data=false 即可成为主节点。 主节点的主要职责是和集群操作相关的内容，如创建或删除索引，跟踪哪些节点是群集的一部分，并决定哪些分
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2019-03-19T02:01:25.000Z" class="post-list__meta--date date">2019-03-19</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2019/03/19/es_load/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+  <!--  -->
+
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNTExNi8xMTY1MQ==">
+    <script type="text/javascript">
+        (function(d, s) {
+            var j, e = d.getElementsByTagName(s)[0];
+
+            if (typeof LivereTower === 'function') {
+                return;
+            }
+
+            j = d.createElement(s);
+            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+            j.async = true;
+
+            e.parentNode.insertBefore(j, e);
+        })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    
+    
+</footer>
+
+
+        </div>
+    </div>
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    
+</body>
+</html>

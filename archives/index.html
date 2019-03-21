@@ -124,6 +124,68 @@
   
     
     <li>
+      <h2 class="post-list__post-title post-title"><a href="/2019/03/19/es_access/" title="link to post.title">利用Nginx作为ES安全访问控制</a></h2>
+      <p class="excerpt">
+    
+      一、需求缘起学习慕课网《基于ElasticSearch搜房网实战》做笔记
+
+描述：es-head/es http请求可不经过任何安全验证在浏览器访问，具有巨大的潜在威胁。
+
+方案：利用Nginx进行访问控制。
+二、环境准备参考《利用Nginx作为ES负载均衡》 一到六。
+修改 ES 各个节点配置，不允许外网访问，并重启， 本练习中使用docker构建环境，所以配置有点区别。es 节点
+
+clust
+    &hellip;
+      </p>
+      <div class="post-list__meta"><time datetime="2019-03-19T02:01:25.000Z" class="post-list__meta--date date">2019-03-19</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2019/03/19/es_access/">继续阅读</a></div>
+      <hr class="post-list__divider" />
+    </li>
+  
+    
+    <li>
+      <h2 class="post-list__post-title post-title"><a href="/2019/03/19/es_load/" title="link to post.title">利用Nginx作为ES负载均衡</a></h2>
+      <p class="excerpt">
+    
+      一、需求缘起学习慕课网《基于ElasticSearch搜房网实战》做笔记
+
+es节点可分为：
+
+《主节点》 
+
+配置 node.master=true,node.data=false 即可成为主节点。 主节点的主要职责是和集群操作相关的内容，如创建或删除索引，跟踪哪些节点是群集的一部分，并决定哪些分片分配给相关的节点。
+
+《数据节点》
+
+配置 node.master=false,node.data
+    &hellip;
+      </p>
+      <div class="post-list__meta"><time datetime="2019-03-19T02:01:25.000Z" class="post-list__meta--date date">2019-03-19</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2019/03/19/es_load/">继续阅读</a></div>
+      <hr class="post-list__divider" />
+    </li>
+  
+    
+    <li>
+      <h2 class="post-list__post-title post-title"><a href="/2019/02/19/jmeter/" title="link to post.title">Jmeter 对api接口进行分布式压测</a></h2>
+      <p class="excerpt">
+    
+      一、需求缘起公司要求对一级api接口进行压测，目标：1万qps
+二、压测部署图 
+二、硬件准备(Linux 4核8g)Jmeter Master : jmeter_master_ip
+
+Jmeter Slave 01: jmeter_slave_ip_01
+
+Jmeter Slave 02: jmeter_slave_ip_02
+
+Jmeter Slave 03: jmeter_slave_ip_
+    &hellip;
+      </p>
+      <div class="post-list__meta"><time datetime="2019-02-19T02:01:25.000Z" class="post-list__meta--date date">2019-02-19</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2019/02/19/jmeter/">继续阅读</a></div>
+      <hr class="post-list__divider" />
+    </li>
+  
+    
+    <li>
       <h2 class="post-list__post-title post-title"><a href="/2018/11/19/elk/" title="link to post.title">ELK日志收集框架部署步骤</a></h2>
       <p class="excerpt">
     
@@ -235,57 +297,12 @@ Redis Cluster采用虚拟分槽，虚拟槽分区巧妙地使用了哈希空间�
     </li>
   
     
-    <li>
-      <h2 class="post-list__post-title post-title"><a href="/2018/03/16/mongodb_install_inDocker/" title="link to post.title">Docker中手动安装Mongodb，不使用Docker的MongoDB镜像。</a></h2>
-      <p class="excerpt">
-    
-      一、环境准备（使用远程主机安装）。1、Docker 的安装。(参考官方文档：https://docs.docker.com/engine/installation/)2、Docker安装ubuntu镜像。docker pull registry.docker-cn.com/library/ubuntu
-二、安装MongoDB。1、使用SecureCRT远程连接主机。2、查看docker 版本：ro
-    &hellip;
-      </p>
-      <div class="post-list__meta"><time datetime="2018-03-16T02:01:25.000Z" class="post-list__meta--date date">2018-03-16</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/03/16/mongodb_install_inDocker/">继续阅读</a></div>
-      <hr class="post-list__divider" />
-    </li>
-  
-    
-    <li>
-      <h2 class="post-list__post-title post-title"><a href="/2018/02/15/maven-docker/" title="link to post.title">Maven + Docker + GitLab + Jenkins 构建镜像并提交Docker私有镜像库， 搭建持续集成环境</a></h2>
-      <p class="excerpt">
-    
-      需求缘起在软件开发过程中尤其在进行到测试阶段时候，开发人员需要打包提交到测试人员 ——&amp;gt; 测试人员发现bug并报告给开发人员 ——&amp;gt; 开发人员fix bug并再次打包提交到测试人员。反复这个流程直到没有bug为止。
-环境准备1、本机  java开发环境、Docker、Maven （安装步骤省略）
-2、服务器 200.168.12.69   Docker （安装步骤省略）
-3、本地使用s
-    &hellip;
-      </p>
-      <div class="post-list__meta"><time datetime="2018-02-15T02:01:25.000Z" class="post-list__meta--date date">2018-02-15</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/02/15/maven-docker/">继续阅读</a></div>
-      <hr class="post-list__divider" />
-    </li>
-  
-    
-    <li>
-      <h2 class="post-list__post-title post-title"><a href="/2017/12/15/jenkins-ci/" title="link to post.title">Jenkins 持续集成工具使用介绍</a></h2>
-      <p class="excerpt">
-    
-      需求缘起在软件开发过程中尤其在进行到测试阶段时候，开发人员需要打包提交到测试人员 ——&amp;gt; 测试人员发现bug并报告给开发人员 ——&amp;gt; 开发人员fix bug并再次打包提交到测试人员。反复这个流程直到没有bug为止。
-传统打包方法-1 （全手动）1、本地编译。
-2、本地导出war。
-3、上传war到服务器。
-4、重启应用服务。
-传统打包方法-2 （半自动）1、本地提交最新代码到版本管理服
-    &hellip;
-      </p>
-      <div class="post-list__meta"><time datetime="2017-12-15T02:01:25.000Z" class="post-list__meta--date date">2017-12-15</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2017/12/15/jenkins-ci/">继续阅读</a></div>
-      <hr class="post-list__divider" />
-    </li>
-  
-    
   </ol>
 
 
   <nav class="pagination" role="navigation">
     
-    <span class="pagination__page-number" > 1 / 2 </span>
+    <span class="pagination__page-number" > 1 / 3 </span>
     
       <a class="older-posts pagination__older btn btn-small btn-tertiary" href="/archives/page/2/">更早 →</a>
     

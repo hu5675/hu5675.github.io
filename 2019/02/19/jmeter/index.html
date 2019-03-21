@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Jmeter 对api接口进行分布式压测 | Bboymars</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="喜欢运动类型的活动">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Jmeter 对api接口进行分布式压测 | Bboymars">
+    <meta name="twitter:description" content="喜欢运动类型的活动">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Jmeter 对api接口进行分布式压测 | Bboymars">
+    <meta property="og:description" content="喜欢运动类型的活动">
+
+    
+    <link rel="stylesheet" href="/css/vno.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+    
+    <link rel="icon" href="/images/avatar-small.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+
+    <link rel="canonical" href="http://bboymars.coding.me/2019/02/19/jmeter/"/>
+
+                 
+</head>
+
+<body class="home-template no-js">
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Bboymars 的主页"><img src="/images/avatar.jpg" width="80" alt="Bboymars logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Bboymars">Bboymars</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">从事Java、IOS开发</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">喜欢运动类型的活动</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/hu5675" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-purple"></div>
+  </div> 
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2019-02-19T02:01:25.000Z" class="post-list__meta--date date">2019-02-19</time> &#8226; <span class="post-meta__tags tags">于&nbsp; </span>
+      <span class="page-pv">
+      &nbsp;阅读&nbsp;<span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span>
+      </span> 
+   
+    </div>
+    <h1 class="post-title">Jmeter 对api接口进行分布式压测</h1>
+  </header>
+
+  <section class="post">
+    <h3 id="一、需求缘起"><a href="#一、需求缘起" class="headerlink" title="一、需求缘起"></a>一、需求缘起</h3><pre><code>公司要求对一级api接口进行压测，目标：1万qps
+</code></pre><h3 id="二、压测部署图"><a href="#二、压测部署图" class="headerlink" title="二、压测部署图"></a>二、压测部署图</h3><p><img src="/images/jmeter/1.png" alt=""> </p>
+<h3 id="二、硬件准备-Linux-4核8g"><a href="#二、硬件准备-Linux-4核8g" class="headerlink" title="二、硬件准备(Linux 4核8g)"></a>二、硬件准备(Linux 4核8g)</h3><pre><code>Jmeter Master : jmeter_master_ip
+
+Jmeter Slave 01: jmeter_slave_ip_01
+
+Jmeter Slave 02: jmeter_slave_ip_02
+
+Jmeter Slave 03: jmeter_slave_ip_03
+
+Nginx : nginx_ip
+
+Server 01 : server_ip_01
+
+Server 02 : server_ip_02
+
+Server 03 : server_ip_03
+</code></pre><h3 id="三、Nginx负载搭建（略）"><a href="#三、Nginx负载搭建（略）" class="headerlink" title="三、Nginx负载搭建（略）"></a>三、Nginx负载搭建（略）</h3><h3 id="四、Jmeter安装"><a href="#四、Jmeter安装" class="headerlink" title="四、Jmeter安装"></a>四、Jmeter安装</h3><pre><code>直接官网下载解压在某个目录即可
+</code></pre><h3 id="五、Jmeter-Slave-01-02-03-配置，修改jmeter目录下bin-jmeter-properties文件"><a href="#五、Jmeter-Slave-01-02-03-配置，修改jmeter目录下bin-jmeter-properties文件" class="headerlink" title="五、Jmeter Slave 01\02\03 配置，修改jmeter目录下bin/jmeter.properties文件"></a>五、Jmeter Slave 01\02\03 配置，修改jmeter目录下bin/jmeter.properties文件</h3><pre><code>(1)server_port=1099
+
+(2)server.rmi.port=1099
+
+(3)server.rmi.ssl.disable=true
+
+(4)启动:  ./bin/jmeter-server 
+</code></pre><h3 id="六、Jmeter-Master-配置-修改jmeter目录下bin-jmeter-properties文件"><a href="#六、Jmeter-Master-配置-修改jmeter目录下bin-jmeter-properties文件" class="headerlink" title="六、Jmeter Master 配置,修改jmeter目录下bin/jmeter.properties文件"></a>六、Jmeter Master 配置,修改jmeter目录下bin/jmeter.properties文件</h3><pre><code>(1)remote_hosts=jmeter_slave_ip_01:1099,jmeter_slave_ip_01:1099,jmeter_slave_ip_01:1099
+
+(2)server.rmi.ssl.disable=true
+</code></pre><h3 id="七、制作jmx脚本"><a href="#七、制作jmx脚本" class="headerlink" title="七、制作jmx脚本"></a>七、制作jmx脚本</h3><pre><code>在window下安装并启动jmeter可视化界面，填写api接口信息，保存为getcnunitlist.jmx
+</code></pre><p><img src="/images/jmeter/2.png" alt=""> </p>
+<h3 id="八、上传getcnunitlist-jmx脚本文件到jmeter-master主机。"><a href="#八、上传getcnunitlist-jmx脚本文件到jmeter-master主机。" class="headerlink" title="八、上传getcnunitlist.jmx脚本文件到jmeter-master主机。"></a>八、上传getcnunitlist.jmx脚本文件到jmeter-master主机。</h3><h3 id="九、在jmeter-master上执行-jmeter-n-r-t-getcnunitlist-jmx-l-test-jtl-进行压测"><a href="#九、在jmeter-master上执行-jmeter-n-r-t-getcnunitlist-jmx-l-test-jtl-进行压测" class="headerlink" title="九、在jmeter-master上执行  jmeter -n -r -t getcnunitlist.jmx -l test.jtl 进行压测"></a>九、在jmeter-master上执行  jmeter -n -r -t getcnunitlist.jmx -l test.jtl 进行压测</h3><h3 id="十、观察测试结果并调整参数，如下调整脚本中的线程数和循环数"><a href="#十、观察测试结果并调整参数，如下调整脚本中的线程数和循环数" class="headerlink" title="十、观察测试结果并调整参数，如下调整脚本中的线程数和循环数"></a>十、观察测试结果并调整参数，如下调整脚本中的线程数和循环数</h3><p><img src="/images/jmeter/3.png" alt=""> </p>
+<h3 id="十一、在压测机和服务器都正常的情况下反复进行测试，当压测机jmeter-slave有压力时可继续增加压测机，当服务器有压力时可继续增加服务器，预估增加服务器带来的qps上升量。"><a href="#十一、在压测机和服务器都正常的情况下反复进行测试，当压测机jmeter-slave有压力时可继续增加压测机，当服务器有压力时可继续增加服务器，预估增加服务器带来的qps上升量。" class="headerlink" title="十一、在压测机和服务器都正常的情况下反复进行测试，当压测机jmeter-slave有压力时可继续增加压测机，当服务器有压力时可继续增加服务器，预估增加服务器带来的qps上升量。"></a>十一、在压测机和服务器都正常的情况下反复进行测试，当压测机jmeter-slave有压力时可继续增加压测机，当服务器有压力时可继续增加服务器，预估增加服务器带来的qps上升量。</h3>
+  </section>
+
+</article>
+
+<section class="read-more">
+           
+    
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">最近的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2019/03/19/es_load/" title="利用Nginx作为ES负载均衡">利用Nginx作为ES负载均衡</a></h2>
+                <p class="excerpt">
+                
+                一、需求缘起学习慕课网《基于ElasticSearch搜房网实战》做笔记
+
+es节点可分为：
+
+《主节点》 
+
+配置 node.master=true,node.data=false 即可成为主节点。 主节点的主要职责是和集群操作相关的内容，如创建或删除索引，跟踪哪些节点是群集的一部分，并决定哪些分
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2019-03-19T02:01:25.000Z" class="post-list__meta--date date">2019-03-19</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2019/03/19/es_load/">继续阅读</a></div>
+                           
+            </div>
+        
+        
+               
+            <div class="read-more-item">
+                <span class="read-more-item-dim">更早的文章</span>
+                <h2 class="post-list__post-title post-title"><a href="/2018/11/19/elk/" title="ELK日志收集框架部署步骤">ELK日志收集框架部署步骤</a></h2>
+                <p class="excerpt">
+                
+                一、需求缘起项目业务越来越复杂，单体项目维护越来越麻烦。 微服务化亟需落实，但随之而来的服务日志怎么管理.
+每个服务都有自己的日志文件，排查问题需要连接到服务主机去查看日志，非常不便。
+需要一个办法将所有服务的日志都收集起来统一管理，这就引入了有名的ELK框架。
+二、环境准备主机中安装Docker 
+                &hellip;
+                </p>
+                <div class="post-list__meta"><time datetime="2018-11-19T08:01:25.000Z" class="post-list__meta--date date">2018-11-19</time> &#8226; <span class="post-list__meta--tags tags">于&nbsp;</span><a class="btn-border-small" href="/2018/11/19/elk/">继续阅读</a></div>
+                       
+            </div>
+        
+     
+   
+   
+  
+</section>
+
+  <!--  -->
+
+<div id="lv-container" data-id="city" data-uid="MTAyMC8zNTExNi8xMTY1MQ==">
+    <script type="text/javascript">
+        (function(d, s) {
+            var j, e = d.getElementsByTagName(s)[0];
+
+            if (typeof LivereTower === 'function') {
+                return;
+            }
+
+            j = d.createElement(s);
+            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+            j.async = true;
+
+            e.parentNode.insertBefore(j, e);
+        })(document, 'script');
+    </script>
+    <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    
+    
+</footer>
+
+
+        </div>
+    </div>
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-78918255-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?9cdad07c755fa23f6aced510c6760e87";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    
+</body>
+</html>
