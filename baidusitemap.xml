@@ -109,12 +109,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2017/06/15/ios_submit_library_to_pods/</loc>
+    <loc>http://bboymars.coding.me/2017/05/15/ios_static_library/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>IOS创建开源库步骤,提交cocoa pods官网，别人可以使用</title>
-        <pubTime>2017-06-15T02:01:25.000Z</pubTime>
+        <title>iOS在Cocoa Touch Static Library使用CocoaPods</title>
+        <pubTime>2017-05-15T02:01:25.000Z</pubTime>
         
          
            
@@ -124,12 +124,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2017/05/15/ios_static_library/</loc>
+    <loc>http://bboymars.coding.me/2017/06/15/ios_submit_library_to_pods/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>iOS在Cocoa Touch Static Library使用CocoaPods</title>
-        <pubTime>2017-05-15T02:01:25.000Z</pubTime>
+        <title>IOS创建开源库步骤,提交cocoa pods官网，别人可以使用</title>
+        <pubTime>2017-06-15T02:01:25.000Z</pubTime>
         
          
            
@@ -184,12 +184,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2018/03/16/mongodb_install_inDocker/</loc>
+    <loc>http://bboymars.coding.me/2017/07/15/cdd-template/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>Docker中手动安装Mongodb，不使用Docker的MongoDB镜像。</title>
-        <pubTime>2018-03-16T02:01:25.000Z</pubTime>
+        <title>MrPeak CDD之模板脚本执行报错解决方法记录一下</title>
+        <pubTime>2017-07-15T02:01:25.000Z</pubTime>
         
          
            
@@ -199,12 +199,12 @@
 
     
   <url>
-    <loc>http://bboymars.coding.me/2017/07/15/cdd-template/</loc>
+    <loc>http://bboymars.coding.me/2018/03/16/mongodb_install_inDocker/</loc>
     <lastmod>2018-06-13T15:02:41.000Z</lastmod>
     <data>
         <display>
-        <title>MrPeak CDD之模板脚本执行报错解决方法记录一下</title>
-        <pubTime>2017-07-15T02:01:25.000Z</pubTime>
+        <title>Docker中手动安装Mongodb，不使用Docker的MongoDB镜像。</title>
+        <pubTime>2018-03-16T02:01:25.000Z</pubTime>
         
          
            
